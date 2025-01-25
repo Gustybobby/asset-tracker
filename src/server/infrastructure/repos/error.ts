@@ -1,4 +1,4 @@
-import { AnyPgTable } from "drizzle-orm/pg-core";
+import type { AnyPgTable } from "drizzle-orm/pg-core";
 
 export class RepoDefaultError extends Error {
   constructor(
