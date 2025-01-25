@@ -7,6 +7,7 @@ import "dotenv/config";
 
 export const db = drizzle({
   client: new Pool({ connectionString: process.env.DATABASE_URL }),
+  logger: true,
 });
 
 type TransactionDB = PgTransaction<
