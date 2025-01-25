@@ -1,14 +1,18 @@
-import type { DB } from "@/db";
 import type { Stock } from "@/server/infrastructure/models/stock.model";
+import type { StockTransaction } from "@/server/infrastructure/models/stock-transaction.model";
 
 export interface IStockRepo {
-  createStocks(
-    db: DB,
-    dataList: Omit<Stock, "createdAt" | "updatedAt">[],
-  ): Promise<Stock[]>;
+  findStockById(stockId: Stock["id"]): Promise<Stock>;
 
-  updateStockHolding(
-    db: DB,
-    data: Pick<Stock, "id" | "holding">,
-  ): Promise<Stock>;
+  createBuyTransaction(
+    data: Omit<StockTransaction, "id" | "type">,
+  ): Promise<StockTransaction>;
+
+  createSellTransaction(
+    data: Omit<StockTransaction, "id" | "type">,
+  ): Promise<StockTransaction>;
+
+  createSellAllTransaction(
+    data: Omit<StockTransaction, "id" | "type" | "shares">,
+  ): Promise<StockTransaction>;
 }
