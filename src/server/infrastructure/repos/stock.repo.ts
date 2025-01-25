@@ -16,7 +16,7 @@ export default class StockRepo implements IStockRepo {
     data: Omit<StockTransaction, "id" | "type">,
   ): Promise<StockTransaction> {
     return db.transaction(async (tx) => {
-      const stock = await this._findOrCreateStock(tx, data.stockId);
+      const stock = await this._findOrCreateStockById(tx, data.stockId);
       await tx
         .update(stocksTable)
         .set({ holding: sql`${stocksTable.holding} + ${data.shares}` })
@@ -34,7 +34,7 @@ export default class StockRepo implements IStockRepo {
     data: Omit<StockTransaction, "id" | "type">,
   ): Promise<StockTransaction> {
     return db.transaction(async (tx) => {
-      const stock = await this._findOrCreateStock(tx, data.stockId);
+      const stock = await this._findStockById(tx, data.stockId);
       await tx
         .update(stocksTable)
         .set({
@@ -83,7 +83,7 @@ export default class StockRepo implements IStockRepo {
     return stocks[0];
   }
 
-  private async _findOrCreateStock(
+  private async _findOrCreateStockById(
     tx: DB,
     stockId: Stock["id"],
   ): Promise<Stock> {
