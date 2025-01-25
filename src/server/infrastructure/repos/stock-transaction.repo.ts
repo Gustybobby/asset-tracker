@@ -6,7 +6,7 @@ import { stockTransactionsTable } from "@/db/schema";
 export default class StockTransactionRepo implements IStockTransactionRepo {
   async createStockTransactions(
     db: DB,
-    dataList: Omit<StockTransaction, "id" | "createdAt">,
+    dataList: Omit<StockTransaction, "id">,
   ): Promise<StockTransaction[]> {
     return db.insert(stockTransactionsTable).values(dataList).returning();
   }

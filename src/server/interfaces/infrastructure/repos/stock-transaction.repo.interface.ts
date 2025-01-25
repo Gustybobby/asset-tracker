@@ -4,6 +4,6 @@ import type { StockTransaction } from "@/server/infrastructure/models/stock-tran
 export interface IStockTransactionRepo {
   createStockTransactions(
     db: DB,
-    dataList: Omit<StockTransaction, "id" | "createdAt">,
+    dataList: Omit<StockTransaction, "id">,
   ): Promise<StockTransaction[]>;
 }

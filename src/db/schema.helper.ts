@@ -1,13 +1,11 @@
 import { timestamp } from "drizzle-orm/pg-core";
 
+export const timestamptz = (name: string) =>
+  timestamp(name, { precision: 6, withTimezone: true });
+
 export const timestampColumns = {
-  createdAt: timestamp("created_at", { precision: 6, withTimezone: true })
-    .defaultNow()
-    .notNull(),
-  updatedAt: timestamp("updated_at", {
-    precision: 6,
-    withTimezone: true,
-  })
+  createdAt: timestamptz("created_at").defaultNow().notNull(),
+  updatedAt: timestamptz("updated_at")
     .defaultNow()
     .$onUpdate(() => new Date())
     .notNull(),

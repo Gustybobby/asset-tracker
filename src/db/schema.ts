@@ -1,5 +1,5 @@
 import { numeric, pgEnum, pgTable, serial, varchar } from "drizzle-orm/pg-core";
-import { timestampColumns } from "./schema.helper";
+import { timestampColumns, timestamptz } from "./schema.helper";
 
 export const stocksTable = pgTable("stocks", {
   id: varchar("id", { length: 16 }).primaryKey(),
@@ -22,5 +22,5 @@ export const stockTransactionsTable = pgTable("stock_transactions", {
   shares: numeric("shares").notNull(),
   fee: numeric("fee").notNull(),
   type: stockTransactionTypeEnum("type").notNull(),
-  createdAt: timestampColumns.createdAt,
+  submittedAt: timestamptz("submitted_at").notNull(),
 });
