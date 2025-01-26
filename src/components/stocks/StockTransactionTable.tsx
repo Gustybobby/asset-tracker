@@ -16,10 +16,10 @@ export default function StockTransactionTable({
   transactions: StockTransaction[];
 }) {
   return (
-    <Table>
+    <Table divClassName="h-96">
       <TableCaption>Your stock transactions</TableCaption>
-      <TableHeader>
-        <TableRow>
+      <TableHeader className="sticky top-0">
+        <TableRow className="bg-muted hover:bg-muted">
           <TableHead>Submitted at</TableHead>
           <TableHead>Stock</TableHead>
           <TableHead>Type</TableHead>
@@ -38,7 +38,7 @@ export default function StockTransactionTable({
             transaction.type === "SELL_ALL" && "text-red-600",
           );
           return (
-            <TableRow key={transaction.id}>
+            <TableRow key={transaction.id} className="hover:bg-inherit">
               <TableCell>
                 {new Date(transaction.submittedAt).toLocaleString("en-gb")}
               </TableCell>

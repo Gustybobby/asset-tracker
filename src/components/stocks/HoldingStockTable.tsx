@@ -15,10 +15,10 @@ export default function HoldingStockTable({
   holdingStocks: Stock[];
 }) {
   return (
-    <Table>
+    <Table divClassName="h-80">
       <TableCaption>A list of your holding stocks</TableCaption>
-      <TableHeader>
-        <TableRow>
+      <TableHeader className="sticky top-0">
+        <TableRow className="bg-muted hover:bg-muted">
           <TableHead>Stock</TableHead>
           <TableHead>Holding</TableHead>
           <TableHead>Average price</TableHead>
@@ -27,8 +27,8 @@ export default function HoldingStockTable({
       </TableHeader>
       <TableBody>
         {holdingStocks.map((stock) => (
-          <TableRow key={stock.id}>
-            <TableCell>{stock.id}</TableCell>
+          <TableRow key={stock.id} className="hover:bg-inherit">
+            <TableCell className="font-bold">{stock.id}</TableCell>
             <TableCell>{stock.holding} shares</TableCell>
             <TableCell>{Number(stock.averagePrice).toFixed(2)}</TableCell>
             <TableCell>
