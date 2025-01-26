@@ -58,6 +58,7 @@ export default function TradePerformanceTable({
                       : "text-red-500",
                 )}
               >
+                {isProfit && "+"}
                 {Number(stock.profit).toFixed(2)} {isHolding && "(?)"}
               </TableCell>
               <TableCell>{Number(stock.totalFee).toFixed(2)}</TableCell>
@@ -71,6 +72,7 @@ export default function TradePerformanceTable({
                       : "text-red-500",
                 )}
               >
+                {isProfitWithFee && "+"}
                 {(Number(stock.profit) - Number(stock.totalFee)).toFixed(2)}
               </TableCell>
             </TableRow>
