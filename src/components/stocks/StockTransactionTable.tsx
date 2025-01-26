@@ -8,6 +8,7 @@ import {
   TableHeader,
   TableRow,
 } from "../ui/table";
+import { cn } from "@/lib/utils";
 
 export default function StockTransactionTable({
   transactions,
@@ -29,24 +30,39 @@ export default function StockTransactionTable({
         </TableRow>
       </TableHeader>
       <TableBody>
-        {transactions.map((transaction) => (
-          <TableRow key={transaction.id}>
-            <TableCell>
-              {new Date(transaction.submittedAt).toLocaleString("en-gb")}
-            </TableCell>
-            <TableCell>{transaction.stockId}</TableCell>
-            <TableCell>{transaction.type.replace("_", " ")}</TableCell>
-            <TableCell>{transaction.executedPrice}</TableCell>
-            <TableCell>{transaction.shares}</TableCell>
-            <TableCell>{transaction.fee}</TableCell>
-            <TableCell>
-              {Number(transaction.executedPrice) * Number(transaction.shares) +
-                (transaction.type === "BUY"
-                  ? +transaction.fee
-                  : -transaction.fee)}
-            </TableCell>
-          </TableRow>
-        ))}
+        {transactions.map((transaction) => {
+          const cellStyle = cn(
+            "font-bold",
+            transaction.type === "BUY" && "text-green-500",
+            transaction.type === "SELL" && "text-red-500",
+            transaction.type === "SELL_ALL" && "text-red-600",
+          );
+          return (
+            <TableRow key={transaction.id}>
+              <TableCell>
+                {new Date(transaction.submittedAt).toLocaleString("en-gb")}
+              </TableCell>
+              <TableCell>{transaction.stockId}</TableCell>
+              <TableCell className={cellStyle}>
+                {transaction.type.replace("_", " ")}
+              </TableCell>
+              <TableCell>
+                {Number(transaction.executedPrice).toFixed(2)}
+              </TableCell>
+              <TableCell>{Number(transaction.shares).toFixed(8)}</TableCell>
+              <TableCell>{transaction.fee}</TableCell>
+              <TableCell className={cellStyle}>
+                {Number(
+                  Number(transaction.executedPrice) *
+                    Number(transaction.shares) +
+                    (transaction.type === "BUY"
+                      ? +transaction.fee
+                      : -transaction.fee),
+                ).toFixed(2)}
+              </TableCell>
+            </TableRow>
+          );
+        })}
       </TableBody>
     </Table>
   );
