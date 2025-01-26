@@ -159,7 +159,17 @@ export default function StockTransactionForm() {
             </FormItem>
           )}
         />
-        <div className="col-span-2 flex justify-end">
+        <div className="col-span-2 flex items-center justify-between">
+          <span className="text-sm">
+            Total {"≈"}{" "}
+            {(
+              Number(form.watch("executedPrice")) *
+                Number(form.watch("shares")) +
+              (form.watch("type") === "BUY" ? 1 : -1) *
+                Number(form.watch("fee"))
+            ).toFixed(2)}{" "}
+            USD
+          </span>
           <Button type="submit" disabled={disableSubmit}>
             Submit
           </Button>
