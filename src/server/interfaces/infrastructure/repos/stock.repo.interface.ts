@@ -4,6 +4,8 @@ import type { StockTransaction } from "@/server/infrastructure/models/stock-tran
 export interface IStockRepo {
   findStockById(stockId: Stock["id"]): Promise<Stock>;
 
+  findHoldingStocks(): Promise<Stock[]>;
+
   createBuyTransaction(
     data: Omit<StockTransaction, "id" | "type">,
   ): Promise<StockTransaction>;

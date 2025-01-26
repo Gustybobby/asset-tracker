@@ -4,12 +4,16 @@ import type { Stock } from "../models/stock.model";
 import type { StockTransaction } from "../models/stock-transaction.model";
 import { db } from "@/db";
 import { stocksTable, stockTransactionsTable } from "@/db/schema";
-import { eq, sql } from "drizzle-orm";
+import { eq, gt, sql } from "drizzle-orm";
 import { RepoSelectNotFoundError } from "./error";
 
 export default class StockRepo implements IStockRepo {
   async findStockById(stockId: Stock["id"]): Promise<Stock> {
     return this._findStockById(db, stockId);
+  }
+
+  async findHoldingStocks(): Promise<Stock[]> {
+    return db.select().from(stocksTable).where(gt(stocksTable.holding, "0"));
   }
 
   async createBuyTransaction(
