@@ -53,9 +53,13 @@ export default function StockTransactionForm() {
   });
 
   async function onSubmit(data: StockTransactionFormSchema) {
-    setDisableSubmit(true);
-    await submitStockTransactionForm(data);
-    router.refresh();
+    try {
+      setDisableSubmit(true);
+      await submitStockTransactionForm(data);
+      router.refresh();
+    } catch (error) {
+      console.error(error);
+    }
     setDisableSubmit(false);
   }
 
