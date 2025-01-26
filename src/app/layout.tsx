@@ -21,8 +21,10 @@ export default function RootLayout({
       <body className={inter.className}>
         <SidebarProvider>
           <NavSideBar />
-          <div className="w-full space-y-2 p-2">
-            <SidebarTrigger />
+          <div className="h-screen w-full overflow-hidden">
+            <div className="w-full border-b p-2 shadow-sm">
+              <SidebarTrigger />
+            </div>
             {children}
           </div>
         </SidebarProvider>

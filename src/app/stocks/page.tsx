@@ -14,7 +14,7 @@ export default async function StockPage() {
       stockRepo.findTradePerformances(),
     ]);
   return (
-    <main className="grid w-full grid-cols-3 gap-2">
+    <main className="grid h-[94vh] w-full grid-cols-3 gap-2 overflow-auto p-2">
       <Card>
         <CardContent></CardContent>
       </Card>
