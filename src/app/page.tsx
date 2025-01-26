@@ -6,8 +6,10 @@ import StockTransactionTable from "@/components/stocks/StockTransactionTable";
 
 export default async function Home() {
   const stockRepo = new StockRepo();
-  const holdingStocks = await stockRepo.findHoldingStocks();
-  const stockTransactions = await stockRepo.findStockTransactions();
+  const [holdingStocks, stockTransactions] = await Promise.all([
+    stockRepo.findHoldingStocks(),
+    stockRepo.findStockTransactions(),
+  ]);
   return (
     <main className="grid w-full grid-cols-3 gap-2">
       <Card>
