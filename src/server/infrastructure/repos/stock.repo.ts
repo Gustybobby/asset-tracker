@@ -60,10 +60,6 @@ export default class StockRepo implements IStockRepo {
         .update(stocksTable)
         .set({
           holding: sql`GREATEST(${stocksTable.holding} - ${data.shares}, 0)`,
-          averagePrice: this.calculateAveragePrice(stock, {
-            ...data,
-            type: "SELL",
-          }),
         })
         .where(eq(stocksTable.id, stock.id));
 
@@ -136,6 +132,6 @@ export default class StockRepo implements IStockRepo {
       const newTotalShares = holding + shares;
       return Math.max(newTotalPrice / newTotalShares, 0).toFixed(2);
     }
-    return averagePrice.toFixed(2);
+    return averagePrice.toFixed(8);
   }
 }

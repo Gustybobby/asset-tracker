@@ -30,7 +30,7 @@ export default function HoldingStockTable({
           <TableRow key={stock.id}>
             <TableCell>{stock.id}</TableCell>
             <TableCell>{stock.holding} shares</TableCell>
-            <TableCell>{stock.averagePrice}</TableCell>
+            <TableCell>{Number(stock.averagePrice).toFixed(2)}</TableCell>
             <TableCell>
               {new Date(stock.updatedAt).toLocaleString("en-gb")}
             </TableCell>
