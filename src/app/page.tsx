@@ -1,17 +1,40 @@
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
-import HoldingStockList from "@/components/summary/HoldingStockList";
+import HoldingStockTable from "@/components/stocks/HoldingStockTable";
 import StockRepo from "@/server/infrastructure/repos/stock.repo";
+import StockTransactionForm from "@/components/stocks/StockTransactionForm";
+import StockTransactionTable from "@/components/stocks/StockTransactionTable";
 
 export default async function Home() {
-  const holdingStocks = await new StockRepo().findHoldingStocks();
+  const stockRepo = new StockRepo();
+  const holdingStocks = await stockRepo.findHoldingStocks();
+  const stockTransactions = await stockRepo.findStockTransactions();
   return (
-    <main className="grid w-full grid-cols-2 gap-2">
+    <main className="grid w-full grid-cols-3 gap-2">
       <Card>
+        <CardContent></CardContent>
+      </Card>
+      <Card className="col-span-2">
         <CardHeader>
-          <CardTitle>Your Stock Holdings</CardTitle>
+          <CardTitle>Your stocks</CardTitle>
         </CardHeader>
         <CardContent>
-          <HoldingStockList holdingStocks={holdingStocks} />
+          <HoldingStockTable holdingStocks={holdingStocks} />
+        </CardContent>
+      </Card>
+      <Card className="col-span-2">
+        <CardHeader>
+          <CardTitle>Your transactions</CardTitle>
+        </CardHeader>
+        <CardContent>
+          <StockTransactionTable transactions={stockTransactions} />
+        </CardContent>
+      </Card>
+      <Card>
+        <CardHeader>
+          <CardTitle>Create new transaction</CardTitle>
+        </CardHeader>
+        <CardContent>
+          <StockTransactionForm />
         </CardContent>
       </Card>
     </main>

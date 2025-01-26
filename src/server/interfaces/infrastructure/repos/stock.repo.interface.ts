@@ -6,6 +6,8 @@ export interface IStockRepo {
 
   findHoldingStocks(): Promise<Stock[]>;
 
+  findStockTransactions(): Promise<StockTransaction[]>;
+
   createBuyTransaction(
     data: Omit<StockTransaction, "id" | "type">,
   ): Promise<StockTransaction>;

@@ -14,7 +14,8 @@ export class RepoDefaultError extends Error {
     const tableName = getTableName(table);
     super(`[code:${code}][table:${tableName}] `);
     this.tableName = tableName;
-    (this.code = code), (this.params = JSON.stringify(params));
+    this.code = code;
+    this.params = JSON.stringify(params);
   }
 }
 

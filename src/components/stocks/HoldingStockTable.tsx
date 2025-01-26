@@ -1,4 +1,4 @@
-import { Stock } from "@/server/infrastructure/models/stock.model";
+import type { Stock } from "@/server/infrastructure/models/stock.model";
 import {
   Table,
   TableBody,
@@ -9,7 +9,7 @@ import {
   TableRow,
 } from "../ui/table";
 
-export default function HoldingStockList({
+export default function HoldingStockTable({
   holdingStocks,
 }: {
   holdingStocks: Stock[];
@@ -26,7 +26,7 @@ export default function HoldingStockList({
       </TableHeader>
       <TableBody>
         {holdingStocks.map((stock) => (
-          <TableRow>
+          <TableRow key={stock.id}>
             <TableCell>{stock.id}</TableCell>
             <TableCell>{stock.holding} shares</TableCell>
             <TableCell>

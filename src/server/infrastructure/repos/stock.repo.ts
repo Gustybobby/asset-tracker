@@ -4,7 +4,7 @@ import type { Stock } from "../models/stock.model";
 import type { StockTransaction } from "../models/stock-transaction.model";
 import { db } from "@/db";
 import { stocksTable, stockTransactionsTable } from "@/db/schema";
-import { eq, gt, sql } from "drizzle-orm";
+import { desc, eq, gt, sql } from "drizzle-orm";
 import { RepoSelectNotFoundError } from "./error";
 
 export default class StockRepo implements IStockRepo {
@@ -14,6 +14,13 @@ export default class StockRepo implements IStockRepo {
 
   async findHoldingStocks(): Promise<Stock[]> {
     return db.select().from(stocksTable).where(gt(stocksTable.holding, "0"));
+  }
+
+  async findStockTransactions(): Promise<StockTransaction[]> {
+    return db
+      .select()
+      .from(stockTransactionsTable)
+      .orderBy(desc(stockTransactionsTable.submittedAt));
   }
 
   async createBuyTransaction(
