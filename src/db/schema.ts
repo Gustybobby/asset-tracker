@@ -24,7 +24,7 @@ export const stockPricesTable = pgTable(
     stockId: varchar("stock_id", { length: 16 })
       .references(() => stocksTable.id)
       .notNull(),
-    date: date("date").notNull(),
+    date: date("date", { mode: "date" }).notNull(),
     open: numeric("open"),
     close: numeric("close"),
   },
