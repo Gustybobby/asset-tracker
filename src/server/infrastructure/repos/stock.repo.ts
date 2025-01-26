@@ -34,7 +34,13 @@ export default class StockRepo implements IStockRepo {
       const stock = await this._findOrCreateStockById(tx, data.stockId);
       await tx
         .update(stocksTable)
-        .set({ holding: sql`${stocksTable.holding} + ${data.shares}` })
+        .set({
+          holding: sql`${stocksTable.holding} + ${data.shares}`,
+          averagePrice: this.calculateAveragePrice(stock, {
+            ...data,
+            type: "BUY",
+          }),
+        })
         .where(eq(stocksTable.id, stock.id));
 
       return tx
@@ -54,6 +60,10 @@ export default class StockRepo implements IStockRepo {
         .update(stocksTable)
         .set({
           holding: sql`GREATEST(${stocksTable.holding} - ${data.shares}, 0)`,
+          averagePrice: this.calculateAveragePrice(stock, {
+            ...data,
+            type: "SELL",
+          }),
         })
         .where(eq(stocksTable.id, stock.id));
 
@@ -72,7 +82,7 @@ export default class StockRepo implements IStockRepo {
       const stock = await this._findStockById(tx, data.stockId);
       await tx
         .update(stocksTable)
-        .set({ holding: "0" })
+        .set({ holding: "0", averagePrice: "0" })
         .where(eq(stocksTable.id, stock.id));
 
       return tx
@@ -105,9 +115,27 @@ export default class StockRepo implements IStockRepo {
     return this._findStockById(tx, stockId).catch(() =>
       tx
         .insert(stocksTable)
-        .values({ id: stockId, holding: "0" })
+        .values({ id: stockId, holding: "0", averagePrice: "0" })
         .returning()
         .then((results) => results[0]),
     );
+  }
+
+  private calculateAveragePrice(
+    stock: Stock,
+    transaction: Omit<StockTransaction, "id">,
+  ): string {
+    const [holding, averagePrice, shares, executedPrice] = [
+      stock.holding,
+      stock.averagePrice,
+      transaction.shares,
+      transaction.executedPrice,
+    ].map(Number);
+    if (transaction.type === "BUY") {
+      const newTotalPrice = holding * averagePrice + shares * executedPrice;
+      const newTotalShares = holding + shares;
+      return Math.max(newTotalPrice / newTotalShares, 0).toFixed(2);
+    }
+    return averagePrice.toFixed(2);
   }
 }

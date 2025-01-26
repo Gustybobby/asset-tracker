@@ -21,7 +21,8 @@ export default function HoldingStockTable({
         <TableRow>
           <TableHead>Stock</TableHead>
           <TableHead>Holding</TableHead>
-          <TableHead>Updated At</TableHead>
+          <TableHead>Average price</TableHead>
+          <TableHead>Updated at</TableHead>
         </TableRow>
       </TableHeader>
       <TableBody>
@@ -29,6 +30,7 @@ export default function HoldingStockTable({
           <TableRow key={stock.id}>
             <TableCell>{stock.id}</TableCell>
             <TableCell>{stock.holding} shares</TableCell>
+            <TableCell>{stock.averagePrice}</TableCell>
             <TableCell>
               {new Date(stock.updatedAt).toLocaleString("en-gb")}
             </TableCell>

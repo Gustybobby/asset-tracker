@@ -54,7 +54,6 @@ export default function StockTransactionForm() {
 
   async function onSubmit(data: StockTransactionFormSchema) {
     setDisableSubmit(true);
-    form.reset();
     await submitStockTransactionForm(data);
     router.refresh();
     setDisableSubmit(false);

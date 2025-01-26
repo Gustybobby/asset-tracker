@@ -4,6 +4,7 @@ import { timestampColumns, timestamptz } from "./schema.helper";
 export const stocksTable = pgTable("stocks", {
   id: varchar("id", { length: 16 }).primaryKey(),
   holding: numeric("holding").notNull(),
+  averagePrice: numeric("average_price").notNull(),
   ...timestampColumns,
 });
 
