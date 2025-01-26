@@ -1,4 +1,7 @@
-import type { IStockRepo } from "@/server/interfaces/infrastructure/repos/stock.repo.interface";
+import type {
+  IStockRepo,
+  TradePerformance,
+} from "@/server/interfaces/infrastructure/repos/stock.repo.interface";
 import type { DB } from "@/db";
 import type { Stock } from "../models/stock.model";
 import type { StockTransaction } from "../models/stock-transaction.model";
@@ -25,6 +28,38 @@ export default class StockRepo implements IStockRepo {
       .select()
       .from(stockTransactionsTable)
       .orderBy(desc(stockTransactionsTable.submittedAt));
+  }
+
+  async findTradePerformances(): Promise<TradePerformance[]> {
+    const profitSubQuery = db
+      .select({
+        stockId: stockTransactionsTable.stockId,
+        profit: sql<string>`
+          sum((case when ${stockTransactionsTable.type} = 'BUY' then -1 else 1 end) * (
+            cast(${stockTransactionsTable.executedPrice} as numeric) * cast(${stockTransactionsTable.shares} as numeric)
+          ))
+        `.as("profit"),
+        totalFee: sql<string>`sum(${stockTransactionsTable.fee})`.as(
+          "totalFee",
+        ),
+      })
+      .from(stockTransactionsTable)
+      .groupBy(stockTransactionsTable.stockId)
+      .as("profitSubQuery");
+
+    return db
+      .select({
+        stockId: stocksTable.id,
+        holding: stocksTable.holding,
+        profit: profitSubQuery.profit,
+        totalFee: profitSubQuery.totalFee,
+      })
+      .from(stocksTable)
+      .innerJoin(profitSubQuery, eq(stocksTable.id, profitSubQuery.stockId))
+      .orderBy(
+        desc(stocksTable.holding),
+        desc(sql`${profitSubQuery.profit} - ${profitSubQuery.totalFee}`),
+      );
   }
 
   async createBuyTransaction(

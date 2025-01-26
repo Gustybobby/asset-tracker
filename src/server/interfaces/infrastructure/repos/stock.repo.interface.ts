@@ -8,6 +8,8 @@ export interface IStockRepo {
 
   findStockTransactions(): Promise<StockTransaction[]>;
 
+  findTradePerformances(): Promise<TradePerformance[]>;
+
   createBuyTransaction(
     data: Omit<StockTransaction, "id" | "type">,
   ): Promise<StockTransaction>;
@@ -19,4 +21,11 @@ export interface IStockRepo {
   createSellAllTransaction(
     data: Omit<StockTransaction, "id" | "type" | "shares">,
   ): Promise<StockTransaction>;
+}
+
+export interface TradePerformance {
+  stockId: Stock["id"];
+  holding: Stock["holding"];
+  profit: string;
+  totalFee: string;
 }

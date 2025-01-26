@@ -1,4 +1,5 @@
-import Link from "next/link";
+"use client";
+
 import {
   Sidebar,
   SidebarContent,
@@ -12,8 +13,11 @@ import {
   SidebarMenuItem,
 } from "../ui/sidebar";
 import { BadgeDollarSignIcon, ChartCandlestickIcon } from "lucide-react";
+import { usePathname } from "next/navigation";
+import Link from "next/link";
 
 export default function NavSideBar() {
+  const pathname = usePathname();
   return (
     <Sidebar collapsible="icon">
       <SidebarHeader>
@@ -34,8 +38,8 @@ export default function NavSideBar() {
           <SidebarGroupContent>
             <SidebarMenu>
               <SidebarMenuItem>
-                <SidebarMenuButton asChild isActive={true}>
-                  <Link href={"/"}>
+                <SidebarMenuButton asChild isActive={pathname === "/stocks"}>
+                  <Link href={"/stocks"}>
                     <ChartCandlestickIcon />
                     Stocks
                   </Link>

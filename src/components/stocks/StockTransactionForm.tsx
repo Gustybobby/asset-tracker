@@ -22,7 +22,7 @@ import {
 } from "../ui/select";
 import { Button } from "../ui/button";
 import { useRouter } from "next/navigation";
-import { submitStockTransactionForm } from "@/app/action";
+import { submitStockTransactionForm } from "@/app/stocks/action";
 import { useState } from "react";
 
 export const StockTransactionFormSchema = StockTransaction.omit({
