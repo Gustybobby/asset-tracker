@@ -127,11 +127,8 @@ export default class StockRepo implements IStockRepo {
       transaction.shares,
       transaction.executedPrice,
     ].map(Number);
-    if (transaction.type === "BUY") {
-      const newTotalPrice = holding * averagePrice + shares * executedPrice;
-      const newTotalShares = holding + shares;
-      return Math.max(newTotalPrice / newTotalShares, 0).toFixed(2);
-    }
-    return averagePrice.toFixed(8);
+    const newTotalPrice = holding * averagePrice + shares * executedPrice;
+    const newTotalShares = holding + shares;
+    return Math.max(newTotalPrice / newTotalShares, 0).toFixed(8);
   }
 }
