@@ -8,14 +8,30 @@ export default class StockDataService implements IStockDataService {
   async getDailyStockData(
     params: Pick<StockPrice, "stockId" | "date">,
   ): Promise<StockPrice> {
+    const modParams = {
+      ...params,
+      date: this.getLatestWeekDayDate(params.date),
+    };
+
     const stockPrice = await this.stockPriceRepo
-      .findStockPrice(params)
+      .findStockPrice(modParams)
       .catch(() => undefined);
     if (stockPrice) {
       return stockPrice;
     }
-    const polygonStockData = await this.fetchPolygonDailyOpenClose(params);
+
+    const polygonStockData = await this.fetchPolygonDailyOpenClose(modParams);
+
     return this.stockPriceRepo.createStockPrice(polygonStockData);
+  }
+
+  private getLatestWeekDayDate(date: Date): Date {
+    date = new Date(date.getTime() + date.getTimezoneOffset() * 60 * 1000);
+    date.setDate(date.getDate() - 1);
+    while (date.getDay() == 0 || date.getDay() == 6) {
+      date.setDate(date.getDate() - 1);
+    }
+    return date;
   }
 
   private async fetchPolygonDailyOpenClose(

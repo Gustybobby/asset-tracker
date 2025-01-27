@@ -13,10 +13,12 @@ export default async function StockPage() {
   const [holdingStocks, stockTransactions, tradePerformances] =
     await Promise.all([
       stockRepo.findHoldingStocks().then(async (holdingStocks) => {
-        const date = getLatestWeekDayDate();
         const latestPrices = await Promise.all(
           holdingStocks.map(({ id }) =>
-            stockDataService.getDailyStockData({ stockId: id, date }),
+            stockDataService.getDailyStockData({
+              stockId: id,
+              date: new Date(),
+            }),
           ),
         );
         return holdingStocks.map((stock, idx) => ({
@@ -67,13 +69,4 @@ export default async function StockPage() {
       </Card>
     </main>
   );
-}
-
-function getLatestWeekDayDate(): Date {
-  const date = new Date();
-  date.setDate(date.getDate() - 1);
-  while (date.getDay() == 0 || date.getDay() == 6) {
-    date.setDate(date.getDate() - 1);
-  }
-  return date;
 }
