@@ -4,6 +4,7 @@ import {
   TableBody,
   TableCaption,
   TableCell,
+  TableFooter,
   TableHead,
   TableHeader,
   TableRow,
@@ -21,6 +22,13 @@ export default function HoldingStockTable({
 }) {
   const totalHoldingPrices = holdingStocks
     .map(({ price, holding }) => Number(price) * Number(holding))
+    .reduce((cum, curr) => cum + curr, 0);
+  const totalHoldingGains = holdingStocks
+    .map(
+      (stock) =>
+        (Number(stock.price) - Number(stock.averagePrice)) *
+        Number(stock.holding),
+    )
     .reduce((cum, curr) => cum + curr, 0);
   return (
     <Table divClassName="h-80">
@@ -72,6 +80,26 @@ export default function HoldingStockTable({
             );
           })}
       </TableBody>
+      <TableFooter>
+        <TableRow>
+          <TableCell className="font-bold">Total</TableCell>
+          <TableCell className="font-bold">
+            {totalHoldingPrices.toFixed(2)}
+          </TableCell>
+          <TableCell></TableCell>
+          <TableCell></TableCell>
+          <TableCell></TableCell>
+          <TableCell
+            className={cn(
+              "font-bold",
+              totalHoldingGains >= 0 ? "text-green-500" : "text-red-500",
+            )}
+          >
+            {totalHoldingGains > 0 && "+"}
+            {totalHoldingGains.toFixed(2)}
+          </TableCell>
+        </TableRow>
+      </TableFooter>
     </Table>
   );
 }
