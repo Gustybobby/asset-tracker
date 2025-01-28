@@ -26,7 +26,11 @@ export default class StockDataService implements IStockDataService {
   }
 
   private getLatestWeekDayDate(date: Date): Date {
-    date = new Date(date.getTime() + date.getTimezoneOffset() * 60 * 1000);
+    const US_TIMEZONE_OFFSET = -600;
+    date = new Date(
+      date.getTime() +
+        (date.getTimezoneOffset() + US_TIMEZONE_OFFSET) * 60 * 1000,
+    );
     date.setDate(date.getDate() - 1);
     while (date.getDay() == 0 || date.getDay() == 6) {
       date.setDate(date.getDate() - 1);
