@@ -9,9 +9,10 @@ import {
   varchar,
 } from "drizzle-orm/pg-core";
 import { timestampColumns, timestamptz } from "./schema.helper";
+import { STOCK_ID_MAX_LENGTH } from "./schema.config";
 
 export const stocksTable = pgTable("stocks", {
-  id: varchar("id", { length: 16 }).primaryKey(),
+  id: varchar("id", { length: STOCK_ID_MAX_LENGTH }).primaryKey(),
   holding: numeric("holding").notNull(),
   averagePrice: numeric("average_price").notNull(),
   ...timestampColumns,
@@ -21,7 +22,7 @@ export const stockPricesTable = pgTable(
   "stock_prices",
   {
     id: serial().primaryKey(),
-    stockId: varchar("stock_id", { length: 16 })
+    stockId: varchar("stock_id", { length: STOCK_ID_MAX_LENGTH })
       .references(() => stocksTable.id)
       .notNull(),
     date: date("date", { mode: "date" }).notNull(),
@@ -44,7 +45,7 @@ export const stockTransactionsTable = pgTable(
   "stock_transactions",
   {
     id: serial("id").primaryKey(),
-    stockId: varchar("stock_id", { length: 16 })
+    stockId: varchar("stock_id", { length: STOCK_ID_MAX_LENGTH })
       .references(() => stocksTable.id)
       .notNull(),
     executedPrice: numeric("executed_price").notNull(),
