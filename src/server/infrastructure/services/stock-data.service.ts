@@ -2,7 +2,7 @@ import type { IStockDataService } from "@/server/interfaces/infrastructure/servi
 import type { IStockPriceRepo } from "@/server/interfaces/infrastructure/repos/stock-price.repo.interface";
 import type { StockPrice } from "../models/stock-price.model";
 
-const US_TIMEZONE_OFFSET = -600;
+const US_TIMEZONE_OFFSET_MIN = -300;
 const DAILY_OPEN_CLOSE_API_URL = (stockId: string, formattedDate: string) =>
   `https://api.polygon.io/v1/open-close/${stockId}/${formattedDate}?adjusted=true&apiKey=${process.env.POLYGON_API_KEY}`;
 
@@ -32,7 +32,7 @@ export default class StockDataService implements IStockDataService {
   private getLatestWeekDayDate(date: Date): Date {
     date = new Date(
       date.getTime() +
-        (date.getTimezoneOffset() + US_TIMEZONE_OFFSET) * 60 * 1000,
+        (date.getTimezoneOffset() + US_TIMEZONE_OFFSET_MIN) * 60 * 1000,
     );
     date.setDate(date.getDate() - 1);
     while (date.getDay() == 0 || date.getDay() == 6) {
