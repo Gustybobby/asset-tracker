@@ -2,6 +2,10 @@ import type { IStockDataService } from "@/server/interfaces/infrastructure/servi
 import type { IStockPriceRepo } from "@/server/interfaces/infrastructure/repos/stock-price.repo.interface";
 import type { StockPrice } from "../models/stock-price.model";
 
+const US_TIMEZONE_OFFSET = -600;
+const DAILY_OPEN_CLOSE_API_URL = (stockId: string, formattedDate: string) =>
+  `https://api.polygon.io/v1/open-close/${stockId}/${formattedDate}?adjusted=true&apiKey=${process.env.POLYGON_API_KEY}`;
+
 export default class StockDataService implements IStockDataService {
   constructor(private readonly stockPriceRepo: IStockPriceRepo) {}
 
@@ -26,7 +30,6 @@ export default class StockDataService implements IStockDataService {
   }
 
   private getLatestWeekDayDate(date: Date): Date {
-    const US_TIMEZONE_OFFSET = -600;
     date = new Date(
       date.getTime() +
         (date.getTimezoneOffset() + US_TIMEZONE_OFFSET) * 60 * 1000,
@@ -46,8 +49,8 @@ export default class StockDataService implements IStockDataService {
       String(params.date.getMonth() + 1).padStart(2, "0"),
       String(params.date.getDate()).padStart(2, "0"),
     ].join("-");
-    const url = `https://api.polygon.io/v1/open-close/${params.stockId}/${formattedDate}?adjusted=true&apiKey=${process.env.POLYGON_API_KEY}`;
-    console.log(`fetching ${url}`);
+    const url = DAILY_OPEN_CLOSE_API_URL(params.stockId, formattedDate);
+    console.info(`fetching ${url}`);
     const res = await fetch(url);
     const { open, close, status, message } = await res.json();
     if (!open || !close) {
