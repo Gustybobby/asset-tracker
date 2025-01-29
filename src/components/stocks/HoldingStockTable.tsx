@@ -1,4 +1,7 @@
-import type { Stock } from "@/server/infrastructure/models/stock.model";
+import type {
+  HoldingStockTableRow,
+  HoldingStockTableSummary,
+} from "@/lib/utils/stock/stock.util.type";
 import {
   Table,
   TableBody,
@@ -11,25 +14,13 @@ import {
 } from "../ui/table";
 import { cn } from "@/lib/utils";
 
-interface StockWithPrice extends Stock {
-  price: string | null;
-}
-
 export default function HoldingStockTable({
   holdingStocks,
+  summary,
 }: {
-  holdingStocks: StockWithPrice[];
+  holdingStocks: HoldingStockTableRow[];
+  summary: HoldingStockTableSummary;
 }) {
-  const totalHoldingPrices = holdingStocks
-    .map(({ price, holding }) => Number(price) * Number(holding))
-    .reduce((cum, curr) => cum + curr, 0);
-  const totalHoldingGains = holdingStocks
-    .map(
-      (stock) =>
-        (Number(stock.price) - Number(stock.averagePrice)) *
-        Number(stock.holding),
-    )
-    .reduce((cum, curr) => cum + curr, 0);
   return (
     <Table divClassName="h-80">
       <TableCaption>A list of your holding stocks</TableCaption>
@@ -44,59 +35,43 @@ export default function HoldingStockTable({
         </TableRow>
       </TableHeader>
       <TableBody>
-        {holdingStocks
-          .toSorted(
-            (a, b) =>
-              -(
-                Number(a.price) * Number(a.holding) -
-                Number(b.price) * Number(b.holding)
-              ),
-          )
-          .map((stock) => {
-            const totalPrice = Number(stock.price) * Number(stock.holding);
-            const allocation = (totalPrice / totalHoldingPrices) * 100;
-            const totalGain =
-              (Number(stock.price) - Number(stock.averagePrice)) *
-              Number(stock.holding);
-            return (
-              <TableRow key={stock.id} className="hover:bg-inherit">
-                <TableCell className="font-bold">{stock.id}</TableCell>
-                <TableCell>
-                  {totalPrice.toFixed(2)} ({allocation.toFixed(2)}%)
-                </TableCell>
-                <TableCell>{stock.price}</TableCell>
-                <TableCell>{Number(stock.holding).toFixed(4)}</TableCell>
-                <TableCell>{Number(stock.averagePrice).toFixed(2)}</TableCell>
-                <TableCell
-                  className={cn(
-                    "font-bold",
-                    totalGain >= 0 ? "text-green-500" : "text-red-500",
-                  )}
-                >
-                  {totalGain > 0 && "+"}
-                  {totalGain.toFixed(2)}
-                </TableCell>
-              </TableRow>
-            );
-          })}
+        {holdingStocks.map((stock) => (
+          <TableRow key={stock.id} className="hover:bg-inherit">
+            <TableCell className="font-bold">{stock.id}</TableCell>
+            <TableCell>
+              {stock.totalPrice} ({stock.allocation}%)
+            </TableCell>
+            <TableCell>{stock.price}</TableCell>
+            <TableCell>{stock.holding}</TableCell>
+            <TableCell>{stock.averagePrice}</TableCell>
+            <TableCell
+              className={cn(
+                "font-bold",
+                Number(stock.totalGain) >= 0
+                  ? "text-green-500"
+                  : "text-red-500",
+              )}
+            >
+              {stock.totalGain}
+            </TableCell>
+          </TableRow>
+        ))}
       </TableBody>
       <TableFooter>
         <TableRow>
           <TableCell className="font-bold">Total</TableCell>
-          <TableCell className="font-bold">
-            {totalHoldingPrices.toFixed(2)}
+          <TableCell className="font-bold" colSpan={4}>
+            {summary.totalHoldingPrices}
           </TableCell>
-          <TableCell></TableCell>
-          <TableCell></TableCell>
-          <TableCell></TableCell>
           <TableCell
             className={cn(
               "font-bold",
-              totalHoldingGains >= 0 ? "text-green-500" : "text-red-500",
+              Number(summary.totalHoldingGains) >= 0
+                ? "text-green-500"
+                : "text-red-500",
             )}
           >
-            {totalHoldingGains > 0 && "+"}
-            {totalHoldingGains.toFixed(2)}
+            {summary.totalHoldingGains}
           </TableCell>
         </TableRow>
       </TableFooter>

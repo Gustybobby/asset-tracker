@@ -1,4 +1,8 @@
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
+import {
+  transformHoldingStockTableRowsAndSummary,
+  transformStockTransationTableRows,
+} from "@/lib/utils/stock/stock.util";
 import HoldingStockTable from "@/components/stocks/HoldingStockTable";
 import StockRepo from "@/server/infrastructure/repos/stock.repo";
 import StockTransactionForm from "@/components/stocks/transactions/StockTransactionForm";
@@ -14,26 +18,30 @@ export default async function StockPage() {
   const stockRepo = new StockRepo();
   const stockDataService = new StockDataService(new StockPriceRepo());
   const dividendRepo = new DividendRepo();
-  const [holdingStocks, stockTransactions, tradePerformances, dividends] =
-    await Promise.all([
-      stockRepo.findHoldingStocks().then(async (holdingStocks) => {
-        const latestPrices = await Promise.all(
-          holdingStocks.map(({ id }) =>
-            stockDataService.getDailyStockData({
-              stockId: id,
-              date: new Date(),
-            }),
-          ),
-        );
-        return holdingStocks.map((stock, idx) => ({
-          ...stock,
-          price: latestPrices[idx].close,
-        }));
-      }),
-      stockRepo.findStockTransactions(),
-      stockRepo.findTradePerformances(),
-      dividendRepo.findDividends(),
-    ]);
+  const [
+    { rows: holdingStocks, summary: holdingStocksSummary },
+    stockTransactions,
+    tradePerformances,
+    dividends,
+  ] = await Promise.all([
+    stockRepo.findHoldingStocks().then(async (holdingStocks) => {
+      const latestPrices = await Promise.all(
+        holdingStocks.map(({ id }) =>
+          stockDataService.getDailyStockData({
+            stockId: id,
+            date: new Date(),
+          }),
+        ),
+      );
+      return transformHoldingStockTableRowsAndSummary(
+        holdingStocks,
+        latestPrices,
+      );
+    }),
+    stockRepo.findStockTransactions(),
+    stockRepo.findTradePerformances(),
+    dividendRepo.findDividends(),
+  ]);
 
   return (
     <main className="grid h-[94vh] w-full grid-cols-3 gap-2 overflow-auto p-2">
@@ -45,7 +53,10 @@ export default async function StockPage() {
           <CardTitle>Your stocks</CardTitle>
         </CardHeader>
         <CardContent>
-          <HoldingStockTable holdingStocks={holdingStocks} />
+          <HoldingStockTable
+            holdingStocks={holdingStocks}
+            summary={holdingStocksSummary}
+          />
         </CardContent>
       </Card>
       <Card className="col-span-2">
@@ -53,7 +64,9 @@ export default async function StockPage() {
           <CardTitle>Your transactions</CardTitle>
         </CardHeader>
         <CardContent>
-          <StockTransactionTable transactions={stockTransactions} />
+          <StockTransactionTable
+            transactions={transformStockTransationTableRows(stockTransactions)}
+          />
         </CardContent>
       </Card>
       <Card>

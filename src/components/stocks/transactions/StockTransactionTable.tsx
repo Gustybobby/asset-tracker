@@ -1,4 +1,4 @@
-import type { StockTransaction } from "@/server/infrastructure/models/stock-transaction.model";
+import type { StockTransactionTableRow } from "@/lib/utils/stock/stock.util.type";
 import {
   Table,
   TableBody,
@@ -13,7 +13,7 @@ import { cn } from "@/lib/utils";
 export default function StockTransactionTable({
   transactions,
 }: {
-  transactions: StockTransaction[];
+  transactions: StockTransactionTableRow[];
 }) {
   return (
     <Table divClassName="h-96">
@@ -39,27 +39,15 @@ export default function StockTransactionTable({
           );
           return (
             <TableRow key={transaction.id} className="hover:bg-inherit">
-              <TableCell>
-                {new Date(transaction.submittedAt).toLocaleString("en-gb")}
-              </TableCell>
+              <TableCell>{transaction.submittedAt}</TableCell>
               <TableCell>{transaction.stockId}</TableCell>
               <TableCell className={cellStyle}>
-                {transaction.type.replace("_", " ")}
+                {transaction.formattedType}
               </TableCell>
-              <TableCell>
-                {Number(transaction.executedPrice).toFixed(2)}
-              </TableCell>
-              <TableCell>{Number(transaction.shares).toFixed(8)}</TableCell>
+              <TableCell>{transaction.executedPrice}</TableCell>
+              <TableCell>{transaction.shares}</TableCell>
               <TableCell>{transaction.fee}</TableCell>
-              <TableCell className={cellStyle}>
-                {Number(
-                  Number(transaction.executedPrice) *
-                    Number(transaction.shares) +
-                    (transaction.type === "BUY"
-                      ? +transaction.fee
-                      : -transaction.fee),
-                ).toFixed(2)}
-              </TableCell>
+              <TableCell className={cellStyle}>{transaction.total}</TableCell>
             </TableRow>
           );
         })}
