@@ -52,7 +52,7 @@ export default function HoldingStockTable({
                   : "text-red-500",
               )}
             >
-              {stock.totalGain}
+              {stock.totalGain} ({stock.totalGainPercent}%)
             </TableCell>
           </TableRow>
         ))}
@@ -71,7 +71,7 @@ export default function HoldingStockTable({
                 : "text-red-500",
             )}
           >
-            {summary.totalHoldingGains}
+            {summary.totalHoldingGains} ({summary.totalHoldingGainsPercent}%)
           </TableCell>
         </TableRow>
       </TableFooter>

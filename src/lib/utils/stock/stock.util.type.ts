@@ -13,9 +13,11 @@ export interface HoldingStockTableRow extends Stock {
   totalPrice: string;
   allocation: string;
   totalGain: string;
+  totalGainPercent: string;
 }
 
 export interface HoldingStockTableSummary {
   totalHoldingPrices: string;
   totalHoldingGains: string;
+  totalHoldingGainsPercent: string;
 }

@@ -32,30 +32,27 @@ export function transformHoldingStockTableRowsAndSummary(
     price: stockPrices[idx].close,
   }));
 
+  const totalBuyPrices = stockWithPrices
+    .map(({ averagePrice, holding }) => Number(averagePrice) * Number(holding))
+    .reduce((cum, curr) => cum + curr, 0);
   const totalHoldingPrices = stockWithPrices
     .map(({ price, holding }) => Number(price) * Number(holding))
     .reduce((cum, curr) => cum + curr, 0);
-
-  const totalHoldingGains = stockWithPrices
-    .map(
-      (stock) =>
-        (Number(stock.price) - Number(stock.averagePrice)) *
-        Number(stock.holding),
-    )
-    .reduce((cum, curr) => cum + curr, 0);
+  const totalHoldingGains = totalHoldingPrices - totalBuyPrices;
 
   return {
     summary: {
       totalHoldingPrices: totalHoldingPrices.toFixed(2),
       totalHoldingGains: `${totalHoldingGains > 0 ? "+" : ""}${totalHoldingGains.toFixed(2)}`,
+      totalHoldingGainsPercent: `${totalHoldingGains > 0 ? "+" : ""}${((totalHoldingGains / totalBuyPrices) * 100).toFixed(2)}`,
     },
     rows: stockWithPrices
       .map((stock) => {
         const totalPrice = Number(stock.price) * Number(stock.holding);
+        const totalBuyPrice =
+          Number(stock.averagePrice) * Number(stock.holding);
         const allocation = (totalPrice / totalHoldingPrices) * 100;
-        const totalGain =
-          (Number(stock.price) - Number(stock.averagePrice)) *
-          Number(stock.holding);
+        const totalGain = totalPrice - totalBuyPrice;
         return {
           ...stock,
           holding: Number(stock.holding).toFixed(4),
@@ -63,6 +60,7 @@ export function transformHoldingStockTableRowsAndSummary(
           totalPrice: totalPrice.toFixed(2),
           allocation: allocation.toFixed(2),
           totalGain: `${totalGain > 0 ? "+" : ""}${totalGain.toFixed(2)}`,
+          totalGainPercent: `${totalGain > 0 ? "+" : ""}${((totalGain / totalBuyPrice) * 100).toFixed(2)}`,
         };
       })
       .toSorted(
