@@ -56,3 +56,13 @@ export const stockTransactionsTable = pgTable(
   },
   (table) => [index("stock_transactions_stock_id_idx").on(table.stockId)],
 );
+
+export const dividendsTable = pgTable("dividends", {
+  id: serial("id").primaryKey(),
+  amount: numeric("amount").notNull(),
+  withHoldingTax: numeric("with_holding_tax").notNull(),
+  stockId: varchar("stock_id", { length: STOCK_ID_MAX_LENGTH })
+    .references(() => stocksTable.id)
+    .notNull(),
+  receivedAt: timestamptz("received_at").notNull(),
+});

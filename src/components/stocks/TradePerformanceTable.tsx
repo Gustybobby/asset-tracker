@@ -16,12 +16,18 @@ export default function TradePerformanceTable({
 }: {
   tradePerformances: TradePerformance[];
 }) {
+  const capitalizedProfitNoFee = tradePerformances
+    .map((stock) => (Number(stock.holding) > 0 ? 0 : Number(stock.profit)))
+    .reduce((cum, curr) => cum + curr, 0);
   const capitalizedProfit = tradePerformances
     .map((stock) =>
       Number(stock.holding) > 0
         ? 0
         : Number(stock.profit) - Number(stock.totalFee),
     )
+    .reduce((cum, curr) => cum + curr, 0);
+  const totalFee = tradePerformances
+    .map((stock) => (Number(stock.holding) > 0 ? 0 : Number(stock.totalFee)))
     .reduce((cum, curr) => cum + curr, 0);
   return (
     <Table>
@@ -81,9 +87,18 @@ export default function TradePerformanceTable({
       </TableBody>
       <TableFooter>
         <TableRow>
-          <TableCell colSpan={4} className="font-bold">
+          <TableCell colSpan={2} className="font-bold">
             Capitalized profit
           </TableCell>
+          <TableCell
+            className={cn(
+              "font-bold",
+              capitalizedProfitNoFee >= 0 ? "text-green-500" : "text-red-500",
+            )}
+          >
+            {capitalizedProfitNoFee.toFixed(2)}
+          </TableCell>
+          <TableCell className="font-bold">{totalFee.toFixed(2)}</TableCell>
           <TableCell
             className={cn(
               "font-bold",

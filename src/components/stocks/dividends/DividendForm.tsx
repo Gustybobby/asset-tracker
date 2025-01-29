@@ -1,6 +1,6 @@
 "use client";
 
-import { StockTransaction } from "@/server/infrastructure/models/stock-transaction.model";
+import { Dividend } from "@/server/infrastructure/models/dividend.model";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { useForm } from "react-hook-form";
 import { z } from "zod";
@@ -11,51 +11,42 @@ import {
   FormItem,
   FormLabel,
   FormMessage,
-} from "../ui/form";
-import { Input } from "../ui/input";
-import {
-  Select,
-  SelectContent,
-  SelectItem,
-  SelectTrigger,
-  SelectValue,
-} from "../ui/select";
-import { Button } from "../ui/button";
+} from "../../ui/form";
+import { Input } from "../../ui/input";
 import { useRouter } from "next/navigation";
-import { submitStockTransactionForm } from "@/app/stocks/action";
+import { submitDividendForm } from "@/app/stocks/action";
 import { useState } from "react";
+import { Button } from "@/components/ui/button";
 
-export const StockTransactionFormSchema = StockTransaction.omit({
+export const DividendFormSchema = Dividend.omit({
   id: true,
 }).extend({
   stockId: z.string().min(1, "Required"),
-  executedPrice: z.coerce.number().min(0, "Executed price cannot be negative"),
-  shares: z.coerce.number(),
-  fee: z.coerce.number().min(0, "Fee cannot be negative"),
+  amount: z.coerce.number().gt(0, "Amount must be more than zero"),
+  withHoldingTax: z.coerce
+    .number()
+    .min(0, "Withholding tax cannot be negative"),
 });
-export type StockTransactionFormSchema = z.infer<
-  typeof StockTransactionFormSchema
->;
+export type DividendFormSchema = z.infer<typeof DividendFormSchema>;
 
-export default function StockTransactionForm() {
+export default function DividendForm() {
   const router = useRouter();
   const [disableSubmit, setDisableSubmit] = useState<boolean>(false);
 
-  const form = useForm<StockTransactionFormSchema>({
-    resolver: zodResolver(StockTransactionFormSchema),
+  const form = useForm<DividendFormSchema>({
+    resolver: zodResolver(DividendFormSchema),
     defaultValues: {
       stockId: "",
-      executedPrice: 0,
-      shares: 0,
-      fee: 0,
-      submittedAt: new Date(),
+      amount: 0,
+      withHoldingTax: 0,
+      receivedAt: new Date(),
     },
   });
 
-  async function onSubmit(data: StockTransactionFormSchema) {
+  async function onSubmit(data: DividendFormSchema) {
     try {
       setDisableSubmit(true);
-      await submitStockTransactionForm(data);
+      await submitDividendForm(data);
       router.refresh();
     } catch (error) {
       console.error(error);
@@ -84,32 +75,10 @@ export default function StockTransactionForm() {
         />
         <FormField
           control={form.control}
-          name="type"
+          name="amount"
           render={({ field }) => (
             <FormItem>
-              <FormLabel>Type</FormLabel>
-              <Select onValueChange={field.onChange} value={field.value}>
-                <FormControl>
-                  <SelectTrigger>
-                    <SelectValue placeholder="Select transaction type" />
-                  </SelectTrigger>
-                </FormControl>
-                <SelectContent>
-                  <SelectItem value="BUY">Buy</SelectItem>
-                  <SelectItem value="SELL">Sell</SelectItem>
-                  <SelectItem value="SELL_ALL">Sell all</SelectItem>
-                </SelectContent>
-              </Select>
-              <FormMessage />
-            </FormItem>
-          )}
-        />
-        <FormField
-          control={form.control}
-          name="executedPrice"
-          render={({ field }) => (
-            <FormItem>
-              <FormLabel>Executed price</FormLabel>
+              <FormLabel>Amount</FormLabel>
               <FormControl>
                 <Input {...field} />
               </FormControl>
@@ -119,10 +88,10 @@ export default function StockTransactionForm() {
         />
         <FormField
           control={form.control}
-          name="shares"
+          name="withHoldingTax"
           render={({ field }) => (
             <FormItem>
-              <FormLabel>Shares</FormLabel>
+              <FormLabel>Withholding tax</FormLabel>
               <FormControl>
                 <Input {...field} />
               </FormControl>
@@ -132,30 +101,17 @@ export default function StockTransactionForm() {
         />
         <FormField
           control={form.control}
-          name="fee"
+          name="receivedAt"
           render={({ field }) => (
             <FormItem>
-              <FormLabel>Fee</FormLabel>
-              <FormControl>
-                <Input {...field} />
-              </FormControl>
-              <FormMessage />
-            </FormItem>
-          )}
-        />
-        <FormField
-          control={form.control}
-          name="submittedAt"
-          render={({ field }) => (
-            <FormItem>
-              <FormLabel>Submitted at</FormLabel>
+              <FormLabel>Received at</FormLabel>
               <FormControl>
                 <Input
                   {...field}
                   value={formatDate(field.value)}
                   type="datetime-local"
                   onChange={(e) =>
-                    form.setValue("submittedAt", new Date(e.target.value))
+                    form.setValue("receivedAt", new Date(e.target.value))
                   }
                 />
               </FormControl>
@@ -164,16 +120,6 @@ export default function StockTransactionForm() {
           )}
         />
         <div className="col-span-2 flex items-center justify-between">
-          <span className="text-sm">
-            Total {"≈"}{" "}
-            {(
-              Number(form.watch("executedPrice")) *
-                Number(form.watch("shares")) +
-              (form.watch("type") === "BUY" ? 1 : -1) *
-                Number(form.watch("fee"))
-            ).toFixed(2)}{" "}
-            USD
-          </span>
           <Button type="submit" disabled={disableSubmit}>
             Submit
           </Button>

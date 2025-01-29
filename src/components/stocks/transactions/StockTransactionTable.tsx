@@ -7,7 +7,7 @@ import {
   TableHead,
   TableHeader,
   TableRow,
-} from "../ui/table";
+} from "../../ui/table";
 import { cn } from "@/lib/utils";
 
 export default function StockTransactionTable({
