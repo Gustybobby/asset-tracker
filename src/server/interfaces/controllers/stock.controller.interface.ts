@@ -1,4 +1,4 @@
-import { Dividend } from "@/server/infrastructure/models/dividend.model";
+import type { Dividend } from "@/server/infrastructure/models/dividend.model";
 import type { StockTransaction } from "@/server/infrastructure/models/stock-transaction.model";
 
 export interface IStockController {
