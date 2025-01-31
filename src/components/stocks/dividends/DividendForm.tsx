@@ -123,7 +123,7 @@ export default function DividendForm() {
             </FormItem>
           )}
         />
-        <div className="col-span-2 flex items-center justify-between">
+        <div className="col-span-2 flex items-center justify-end">
           <Button type="submit" disabled={disableSubmit}>
             Submit
           </Button>
