@@ -2,7 +2,7 @@ import type { IConfigRepo } from "@/server/interfaces/infrastructure/repos/confi
 import type { ConfigKey } from "../models/config.model";
 import { Config } from "../models/config.model";
 import { db } from "@/db";
-import { configsTable } from "@/db/schema";
+import { configsTable } from "@/db/schema/schema";
 import { eq } from "drizzle-orm";
 
 export default class ConfigRepo implements IConfigRepo {

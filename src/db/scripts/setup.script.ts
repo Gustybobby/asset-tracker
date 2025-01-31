@@ -1,6 +1,6 @@
 import type { Config } from "@/server/infrastructure/models/config.model";
 import { db } from "..";
-import { configsTable } from "../schema";
+import { configsTable } from "../schema/schema";
 
 const configs: Config[] = [
   { key: "BASE_CURRENCY", value: process.env.BASE_CURRENCY! },

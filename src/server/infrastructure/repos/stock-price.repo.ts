@@ -1,7 +1,7 @@
 import type { IStockPriceRepo } from "@/server/interfaces/infrastructure/repos/stock-price.repo.interface";
 import type { StockPrice } from "../models/stock-price.model";
 import { db } from "@/db";
-import { stockPricesTable } from "@/db/schema";
+import { stockPricesTable } from "@/db/schema/schema";
 import { and, eq } from "drizzle-orm";
 import { RepoSelectNotFoundError } from "./error";
 

@@ -6,7 +6,7 @@ import type { DB } from "@/db";
 import type { Stock } from "../models/stock.model";
 import type { StockTransaction } from "../models/stock-transaction.model";
 import { db } from "@/db";
-import { stocksTable, stockTransactionsTable } from "@/db/schema";
+import { stocksTable, stockTransactionsTable } from "@/db/schema/schema";
 import { asc, desc, eq, gt, sql } from "drizzle-orm";
 import { RepoSelectNotFoundError } from "./error";
 
