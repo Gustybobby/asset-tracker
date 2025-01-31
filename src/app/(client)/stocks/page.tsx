@@ -1,11 +1,10 @@
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
-import StockTransactionForm from "@/components/stocks/transactions/StockTransactionForm";
-import TradePerformanceTable from "@/components/stocks/TradePerformanceTable";
-import DividendForm from "@/components/stocks/dividends/DividendForm";
-import DividendTable from "@/components/stocks/dividends/DividendTable";
 import HoldingStocksCard from "@/components/stocks/page/HoldingStocksCard";
 import StockTransactionsCard from "@/components/stocks/page/StockTransactionsCard";
 import TradePerformancesCard from "@/components/stocks/page/TradePerformancesCard";
+import DividendsCard from "@/components/stocks/page/DividendsCard";
+import StockTransactionForm from "@/components/stocks/transactions/StockTransactionForm";
+import DividendForm from "@/components/stocks/dividends/DividendForm";
 
 export default async function StockPage() {
   return (
@@ -24,14 +23,7 @@ export default async function StockPage() {
         </CardContent>
       </Card>
       <TradePerformancesCard className="col-span-3" />
-      <Card className="col-span-2">
-        <CardHeader>
-          <CardTitle>Dividend records</CardTitle>
-        </CardHeader>
-        <CardContent>
-          <DividendTable dividends={[]} />
-        </CardContent>
-      </Card>
+      <DividendsCard className="col-span-2" />
       <Card>
         <CardHeader>
           <CardTitle>Create new dividend record</CardTitle>
