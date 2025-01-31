@@ -5,11 +5,17 @@ import {
   pgEnum,
   pgTable,
   serial,
+  text,
   unique,
   varchar,
 } from "drizzle-orm/pg-core";
 import { timestampColumns, timestamptz } from "./schema.helper";
 import { STOCK_ID_MAX_LENGTH } from "./schema.config";
+
+export const configsTable = pgTable("configs", {
+  key: text("key").primaryKey(),
+  value: text("value").notNull(),
+});
 
 export const stocksTable = pgTable("stocks", {
   id: varchar("id", { length: STOCK_ID_MAX_LENGTH }).primaryKey(),
