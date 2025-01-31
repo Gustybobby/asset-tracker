@@ -22,8 +22,8 @@ import {
 } from "../../ui/select";
 import { Button } from "../../ui/button";
 import { useRouter } from "next/navigation";
-import { submitStockTransactionForm } from "@/app/stocks/action";
 import { useState } from "react";
+import { createStockTransaction } from "@/server/controllers/stock.controller";
 
 export const StockTransactionFormSchema = StockTransaction.omit({
   id: true,
@@ -55,7 +55,12 @@ export default function StockTransactionForm() {
   async function onSubmit(data: StockTransactionFormSchema) {
     try {
       setDisableSubmit(true);
-      await submitStockTransactionForm(data);
+      await createStockTransaction({
+        ...data,
+        executedPrice: String(data.executedPrice),
+        shares: String(data.shares),
+        fee: String(data.fee),
+      });
       router.refresh();
     } catch (error) {
       console.error(error);

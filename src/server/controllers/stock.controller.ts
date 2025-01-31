@@ -1,28 +1,44 @@
-import type { IStockController } from "../interfaces/controllers/stock.controller.interface";
-import type { IStockUseCase } from "../interfaces/usecases/stock.usecase.interface";
+"use server";
+
+import type { Stock } from "../infrastructure/models/stock.model";
 import { StockTransaction } from "../infrastructure/models/stock-transaction.model";
 import { Dividend } from "../infrastructure/models/dividend.model";
 import StockUseCase from "../usecases/stock.usecase";
 import StockRepo from "../infrastructure/repos/stock.repo";
 import DividendRepo from "../infrastructure/repos/dividend.repo";
+import StockDataService from "../infrastructure/services/stock-data.service";
+import StockPriceRepo from "../infrastructure/repos/stock-price.repo";
 
-export default class StockController implements IStockController {
-  constructor(
-    private readonly stockUseCase: IStockUseCase = new StockUseCase(
-      new StockRepo(),
-      new DividendRepo(),
-    ),
-  ) {}
+export async function getHoldingStockWithPrices(): Promise<
+  (Stock & { price: string | null })[]
+> {
+  const stockRepo = new StockRepo();
+  const stockDataService = new StockDataService(new StockPriceRepo());
+  return stockRepo
+    .findHoldingStocks()
+    .then(async (holdingStocks) =>
+      Promise.all(
+        holdingStocks.map((stock) =>
+          stockDataService
+            .getDailyStockData({ stockId: stock.id, date: new Date() })
+            .then((priceData) => ({ ...stock, price: priceData.close })),
+        ),
+      ),
+    );
+}
 
-  async createTransaction(
-    data: Omit<StockTransaction, "id">,
-  ): Promise<StockTransaction> {
-    data = StockTransaction.omit({ id: true }).parse(data);
-    return this.stockUseCase.createTransaction(data);
-  }
+export async function createStockTransaction(
+  data: Omit<StockTransaction, "id">,
+): Promise<StockTransaction> {
+  const stockUseCase = new StockUseCase(new StockRepo(), new DividendRepo());
+  return stockUseCase.createTransaction(
+    StockTransaction.omit({ id: true }).parse(data),
+  );
+}
 
-  async createDividend(data: Omit<Dividend, "id">): Promise<Dividend> {
-    data = Dividend.omit({ id: true }).parse(data);
-    return this.stockUseCase.createDividend(data);
-  }
+export async function createDividend(
+  data: Omit<Dividend, "id">,
+): Promise<Dividend> {
+  const stockUseCase = new StockUseCase(new StockRepo(), new DividendRepo());
+  return stockUseCase.createDividend(Dividend.omit({ id: true }).parse(data));
 }

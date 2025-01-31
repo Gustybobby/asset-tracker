@@ -14,9 +14,9 @@ import {
 } from "../../ui/form";
 import { Input } from "../../ui/input";
 import { useRouter } from "next/navigation";
-import { submitDividendForm } from "@/app/stocks/action";
 import { useState } from "react";
 import { Button } from "@/components/ui/button";
+import { createDividend } from "@/server/controllers/stock.controller";
 
 export const DividendFormSchema = Dividend.omit({
   id: true,
@@ -46,7 +46,11 @@ export default function DividendForm() {
   async function onSubmit(data: DividendFormSchema) {
     try {
       setDisableSubmit(true);
-      await submitDividendForm(data);
+      await createDividend({
+        ...data,
+        amount: String(data.amount),
+        withHoldingTax: String(data.withHoldingTax),
+      });
       router.refresh();
     } catch (error) {
       console.error(error);

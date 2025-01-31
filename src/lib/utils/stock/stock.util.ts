@@ -5,7 +5,6 @@ import type {
 } from "./stock.util.type";
 import type { StockTransaction } from "@/server/infrastructure/models/stock-transaction.model";
 import type { Stock } from "@/server/infrastructure/models/stock.model";
-import type { StockPrice } from "@/server/infrastructure/models/stock-price.model";
 
 export function transformStockTransationTableRows(
   transactions: StockTransaction[],
@@ -24,14 +23,8 @@ export function transformStockTransationTableRows(
 }
 
 export function transformHoldingStockTableRowsAndSummary(
-  stocks: Stock[],
-  stockPrices: StockPrice[],
+  stockWithPrices: (Stock & { price: string | null })[],
 ): { summary: HoldingStockTableSummary; rows: HoldingStockTableRow[] } {
-  const stockWithPrices = stocks.map((stock, idx) => ({
-    ...stock,
-    price: stockPrices[idx].close,
-  }));
-
   const totalBuyPrices = stockWithPrices
     .map(({ averagePrice, holding }) => Number(averagePrice) * Number(holding))
     .reduce((cum, curr) => cum + curr, 0);
