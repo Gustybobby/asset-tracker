@@ -14,12 +14,16 @@ import {
 } from "../../ui/table";
 import { cn } from "@/lib/utils";
 
+const HIDDEN_PLACEHOLDER = "****";
+
 export default function HoldingStockTable({
   holdingStocks,
   summary,
+  amountVisible,
 }: {
   holdingStocks: HoldingStockTableRow[];
   summary: HoldingStockTableSummary;
+  amountVisible: boolean;
 }) {
   return (
     <Table divClassName="h-80">
@@ -39,11 +43,14 @@ export default function HoldingStockTable({
           <TableRow key={stock.id} className="hover:bg-inherit">
             <TableCell className="font-bold">{stock.id}</TableCell>
             <TableCell>
-              {stock.totalPrice} ({stock.allocation}%)
+              {amountVisible ? stock.totalPrice : HIDDEN_PLACEHOLDER} (
+              {stock.allocation}%)
             </TableCell>
             <TableCell>{stock.price}</TableCell>
             <TableCell>{stock.holding}</TableCell>
-            <TableCell>{stock.averagePrice}</TableCell>
+            <TableCell>
+              {amountVisible ? stock.averagePrice : HIDDEN_PLACEHOLDER}
+            </TableCell>
             <TableCell
               className={cn(
                 "font-bold",
@@ -52,7 +59,8 @@ export default function HoldingStockTable({
                   : "text-red-500",
               )}
             >
-              {stock.totalGain} ({stock.totalGainPercent}%)
+              {amountVisible ? stock.totalGain : HIDDEN_PLACEHOLDER} (
+              {stock.totalGainPercent}%)
             </TableCell>
           </TableRow>
         ))}
@@ -61,7 +69,7 @@ export default function HoldingStockTable({
         <TableRow>
           <TableCell className="font-bold">Total</TableCell>
           <TableCell className="font-bold" colSpan={4}>
-            {summary.totalHoldingPrices}
+            {amountVisible ? summary.totalHoldingPrices : HIDDEN_PLACEHOLDER}
           </TableCell>
           <TableCell
             className={cn(
@@ -71,7 +79,8 @@ export default function HoldingStockTable({
                 : "text-red-500",
             )}
           >
-            {summary.totalHoldingGains} ({summary.totalHoldingGainsPercent}%)
+            {amountVisible ? summary.totalHoldingGains : HIDDEN_PLACEHOLDER} (
+            {summary.totalHoldingGainsPercent}%)
           </TableCell>
         </TableRow>
       </TableFooter>

@@ -1,8 +1,9 @@
 import type { Metadata } from "next";
 import { Inter } from "next/font/google";
-import "./globals.css";
 import { SidebarProvider, SidebarTrigger } from "@/components/ui/sidebar";
+import { AmountVisibilityTrigger } from "@/hooks/stocks/use-amount-visibility";
 import NavSideBar from "@/components/layout/NavSideBar";
+import "./globals.css";
 
 const inter = Inter({ subsets: ["latin"] });
 
@@ -24,6 +25,7 @@ export default function RootLayout({
           <div className="h-screen w-full overflow-hidden">
             <div className="w-full border-b p-2 shadow-sm">
               <SidebarTrigger />
+              <AmountVisibilityTrigger />
             </div>
             {children}
           </div>

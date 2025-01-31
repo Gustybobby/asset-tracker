@@ -9,10 +9,14 @@ import {
   TableRow,
 } from "../../ui/table";
 
+const HIDDEN_PLACEHOLDER = "****";
+
 export default function DividendTable({
   dividends,
+  amountVisible,
 }: {
   dividends: Dividend[];
+  amountVisible: boolean;
 }) {
   return (
     <Table divClassName="h-96">
@@ -34,14 +38,22 @@ export default function DividendTable({
                 {new Date(dividend.receivedAt).toLocaleString("en-gb")}
               </TableCell>
               <TableCell>{dividend.stockId}</TableCell>
-              <TableCell>{Number(dividend.amount).toFixed(2)}</TableCell>
               <TableCell>
-                {Number(dividend.withHoldingTax).toFixed(2)}
+                {amountVisible
+                  ? Number(dividend.amount).toFixed(2)
+                  : HIDDEN_PLACEHOLDER}
               </TableCell>
               <TableCell>
-                {(
-                  Number(dividend.amount) - Number(dividend.withHoldingTax)
-                ).toFixed(2)}
+                {amountVisible
+                  ? Number(dividend.withHoldingTax).toFixed(2)
+                  : HIDDEN_PLACEHOLDER}
+              </TableCell>
+              <TableCell>
+                {amountVisible
+                  ? (
+                      Number(dividend.amount) - Number(dividend.withHoldingTax)
+                    ).toFixed(2)
+                  : HIDDEN_PLACEHOLDER}
               </TableCell>
             </TableRow>
           );

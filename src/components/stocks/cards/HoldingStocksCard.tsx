@@ -1,5 +1,6 @@
 "use client";
 
+import { useAmountVisibility } from "@/hooks/stocks/use-amount-visibility";
 import { useHoldingStocks } from "@/hooks/stocks/use-holding-stocks";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import HoldingStockTable from "../holdings/HoldingStockTable";
@@ -10,6 +11,7 @@ export default function HoldingStocksCard({
 }: {
   className?: string;
 }) {
+  const { visible } = useAmountVisibility();
   const { holdingStocks, holdingStocksSummary } = useHoldingStocks();
 
   return (
@@ -22,6 +24,7 @@ export default function HoldingStocksCard({
           <HoldingStockTable
             holdingStocks={holdingStocks}
             summary={holdingStocksSummary}
+            amountVisible={visible}
           />
         ) : (
           <TableSkeleton colNums={6} rowNums={6} />

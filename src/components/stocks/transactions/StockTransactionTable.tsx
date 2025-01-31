@@ -10,10 +10,14 @@ import {
 } from "../../ui/table";
 import { cn } from "@/lib/utils";
 
+const HIDDEN_PLACEHOLDER = "****";
+
 export default function StockTransactionTable({
   transactions,
+  amountVisible,
 }: {
   transactions: StockTransactionTableRow[];
+  amountVisible: boolean;
 }) {
   return (
     <Table divClassName="h-96">
@@ -44,10 +48,18 @@ export default function StockTransactionTable({
               <TableCell className={cellStyle}>
                 {transaction.formattedType}
               </TableCell>
-              <TableCell>{transaction.executedPrice}</TableCell>
-              <TableCell>{transaction.shares}</TableCell>
-              <TableCell>{transaction.fee}</TableCell>
-              <TableCell className={cellStyle}>{transaction.total}</TableCell>
+              <TableCell>
+                {amountVisible ? transaction.executedPrice : HIDDEN_PLACEHOLDER}
+              </TableCell>
+              <TableCell>
+                {amountVisible ? transaction.shares : HIDDEN_PLACEHOLDER}
+              </TableCell>
+              <TableCell>
+                {amountVisible ? transaction.fee : HIDDEN_PLACEHOLDER}
+              </TableCell>
+              <TableCell className={cellStyle}>
+                {amountVisible ? transaction.total : HIDDEN_PLACEHOLDER}
+              </TableCell>
             </TableRow>
           );
         })}

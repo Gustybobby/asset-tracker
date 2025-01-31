@@ -2,9 +2,12 @@ import type {
   HoldingStockTableRow,
   HoldingStockTableSummary,
   StockTransactionTableRow,
+  TradePerformanceTableRow,
+  TradePerformanceTableSummary,
 } from "./stock.util.type";
 import type { StockTransaction } from "@/server/infrastructure/models/stock-transaction.model";
 import type { Stock } from "@/server/infrastructure/models/stock.model";
+import type { TradePerformance } from "@/server/interfaces/infrastructure/repos/stock.repo.interface";
 
 export function transformStockTransationTableRows(
   transactions: StockTransaction[],
@@ -63,5 +66,40 @@ export function transformHoldingStockTableRowsAndSummary(
             Number(b.price) * Number(b.holding)
           ),
       ),
+  };
+}
+
+export function transformTradePerformanceTableRowsAndSummary(
+  tradePerformances: TradePerformance[],
+): { summary: TradePerformanceTableSummary; rows: TradePerformanceTableRow[] } {
+  const capitalizedProfitNoFee = tradePerformances
+    .map((stock) => (Number(stock.holding) > 0 ? 0 : Number(stock.profit)))
+    .reduce((cum, curr) => cum + curr, 0);
+  const totalFee = tradePerformances
+    .map((stock) => (Number(stock.holding) > 0 ? 0 : Number(stock.totalFee)))
+    .reduce((cum, curr) => cum + curr, 0);
+
+  return {
+    summary: {
+      capitalizedProfitNoFee: capitalizedProfitNoFee.toFixed(2),
+      totalFee: totalFee.toFixed(2),
+      capitalizedProfit: (capitalizedProfitNoFee - totalFee).toFixed(2),
+    },
+    rows: tradePerformances.map((stock) => {
+      const isHolding = Number(stock.holding) > 0;
+      const isProfit = Number(stock.profit) > 0;
+      const isProfitWithFee = Number(stock.profit) - Number(stock.totalFee) > 0;
+      const profitWithFee = Number(stock.profit) - Number(stock.totalFee);
+      return {
+        ...stock,
+        isHolding,
+        isProfit,
+        isProfitWithFee,
+        holding: isHolding ? `${stock.holding} shares` : "No longer holds",
+        profit: `${isProfit ? "+" : ""}${Number(stock.profit).toFixed(2)} ${isHolding ? "(?)" : ""}`,
+        totalFee: Number(stock.totalFee).toFixed(2),
+        profitWithFee: `${isProfitWithFee ? "+" : ""}${profitWithFee.toFixed(2)}`,
+      };
+    }),
   };
 }

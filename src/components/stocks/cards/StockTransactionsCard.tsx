@@ -1,5 +1,6 @@
 "use client";
 
+import { useAmountVisibility } from "@/hooks/stocks/use-amount-visibility";
 import { useStockTransactions } from "@/hooks/stocks/use-stock-transactions";
 import { Card, CardHeader, CardTitle, CardContent } from "@/components/ui/card";
 import StockTransactionTable from "../transactions/StockTransactionTable";
@@ -10,6 +11,7 @@ export default function StockTransactionsCard({
 }: {
   className?: string;
 }) {
+  const { visible } = useAmountVisibility();
   const { stockTransactions } = useStockTransactions();
 
   return (
@@ -19,7 +21,10 @@ export default function StockTransactionsCard({
       </CardHeader>
       <CardContent>
         {stockTransactions ? (
-          <StockTransactionTable transactions={stockTransactions} />
+          <StockTransactionTable
+            transactions={stockTransactions}
+            amountVisible={visible}
+          />
         ) : (
           <TableSkeleton colNums={7} rowNums={9} />
         )}

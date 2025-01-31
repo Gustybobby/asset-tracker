@@ -1,4 +1,7 @@
-import type { TradePerformance } from "@/server/interfaces/infrastructure/repos/stock.repo.interface";
+import type {
+  TradePerformanceTableRow,
+  TradePerformanceTableSummary,
+} from "@/lib/utils/stock/stock.util.type";
 import {
   Table,
   TableBody,
@@ -11,24 +14,17 @@ import {
 } from "../../ui/table";
 import { cn } from "@/lib/utils";
 
+const HIDDEN_PLACEHOLDER = "****";
+
 export default function TradePerformanceTable({
   tradePerformances,
+  summary,
+  amountVisible,
 }: {
-  tradePerformances: TradePerformance[];
+  tradePerformances: TradePerformanceTableRow[];
+  summary: TradePerformanceTableSummary;
+  amountVisible: boolean;
 }) {
-  const capitalizedProfitNoFee = tradePerformances
-    .map((stock) => (Number(stock.holding) > 0 ? 0 : Number(stock.profit)))
-    .reduce((cum, curr) => cum + curr, 0);
-  const capitalizedProfit = tradePerformances
-    .map((stock) =>
-      Number(stock.holding) > 0
-        ? 0
-        : Number(stock.profit) - Number(stock.totalFee),
-    )
-    .reduce((cum, curr) => cum + curr, 0);
-  const totalFee = tradePerformances
-    .map((stock) => (Number(stock.holding) > 0 ? 0 : Number(stock.totalFee)))
-    .reduce((cum, curr) => cum + curr, 0);
   return (
     <Table divClassName="h-[32rem]">
       <TableCaption>Your individual stock trade performances</TableCaption>
@@ -42,48 +38,43 @@ export default function TradePerformanceTable({
         </TableRow>
       </TableHeader>
       <TableBody>
-        {tradePerformances.map((stock) => {
-          const isHolding = Number(stock.holding) > 0;
-          const isProfit = Number(stock.profit) > 0;
-          const isProfitWithFee =
-            Number(stock.profit) - Number(stock.totalFee) > 0;
-
-          return (
-            <TableRow key={stock.stockId} className="hover:bg-inherit">
-              <TableCell className="font-bold">{stock.stockId}</TableCell>
-              <TableCell>
-                {isHolding ? `${stock.holding} shares` : "No longer holds"}
-              </TableCell>
-              <TableCell
-                className={cn(
-                  "font-bold",
-                  isHolding
-                    ? "text-yellow-500"
-                    : isProfit
-                      ? "text-green-500"
-                      : "text-red-500",
-                )}
-              >
-                {isProfit && "+"}
-                {Number(stock.profit).toFixed(2)} {isHolding && "(?)"}
-              </TableCell>
-              <TableCell>{Number(stock.totalFee).toFixed(2)}</TableCell>
-              <TableCell
-                className={cn(
-                  "font-bold",
-                  isHolding
-                    ? "text-yellow-500"
-                    : isProfitWithFee
-                      ? "text-green-500"
-                      : "text-red-500",
-                )}
-              >
-                {isProfitWithFee && "+"}
-                {(Number(stock.profit) - Number(stock.totalFee)).toFixed(2)}
-              </TableCell>
-            </TableRow>
-          );
-        })}
+        {tradePerformances.map((stock) => (
+          <TableRow key={stock.stockId} className="hover:bg-inherit">
+            <TableCell className="font-bold">{stock.stockId}</TableCell>
+            <TableCell>
+              {amountVisible || !stock.isHolding
+                ? stock.holding
+                : HIDDEN_PLACEHOLDER}
+            </TableCell>
+            <TableCell
+              className={cn(
+                "font-bold",
+                stock.isHolding
+                  ? "text-yellow-500"
+                  : stock.isProfit
+                    ? "text-green-500"
+                    : "text-red-500",
+              )}
+            >
+              {amountVisible ? stock.profit : HIDDEN_PLACEHOLDER}
+            </TableCell>
+            <TableCell>
+              {amountVisible ? stock.totalFee : HIDDEN_PLACEHOLDER}
+            </TableCell>
+            <TableCell
+              className={cn(
+                "font-bold",
+                stock.isHolding
+                  ? "text-yellow-500"
+                  : stock.isProfitWithFee
+                    ? "text-green-500"
+                    : "text-red-500",
+              )}
+            >
+              {amountVisible ? stock.profitWithFee : HIDDEN_PLACEHOLDER}
+            </TableCell>
+          </TableRow>
+        ))}
       </TableBody>
       <TableFooter>
         <TableRow>
@@ -93,19 +84,27 @@ export default function TradePerformanceTable({
           <TableCell
             className={cn(
               "font-bold",
-              capitalizedProfitNoFee >= 0 ? "text-green-500" : "text-red-500",
+              Number(summary.capitalizedProfitNoFee) >= 0
+                ? "text-green-500"
+                : "text-red-500",
             )}
           >
-            {capitalizedProfitNoFee.toFixed(2)}
+            {amountVisible
+              ? summary.capitalizedProfitNoFee
+              : HIDDEN_PLACEHOLDER}
           </TableCell>
-          <TableCell className="font-bold">{totalFee.toFixed(2)}</TableCell>
+          <TableCell className="font-bold">
+            {amountVisible ? summary.totalFee : HIDDEN_PLACEHOLDER}
+          </TableCell>
           <TableCell
             className={cn(
               "font-bold",
-              capitalizedProfit >= 0 ? "text-green-500" : "text-red-500",
+              Number(summary.capitalizedProfit) >= 0
+                ? "text-green-500"
+                : "text-red-500",
             )}
           >
-            {capitalizedProfit.toFixed(2)}
+            {amountVisible ? summary.capitalizedProfit : HIDDEN_PLACEHOLDER}
           </TableCell>
         </TableRow>
       </TableFooter>

@@ -26,9 +26,11 @@ const COLORS = [
 export default function HoldingStocksChart({
   holdingStocks,
   summary,
+  amountVisible,
 }: {
   holdingStocks: HoldingStockTableRow[];
   summary: HoldingStockTableSummary;
+  amountVisible: boolean;
 }) {
   const chartConfig = useMemo(
     () => ({
@@ -55,10 +57,12 @@ export default function HoldingStocksChart({
   return (
     <ChartContainer config={chartConfig} className="mx-auto aspect-square h-96">
       <PieChart>
-        <ChartTooltip
-          cursor={false}
-          content={<ChartTooltipContent hideLabel />}
-        />
+        {amountVisible && (
+          <ChartTooltip
+            cursor={false}
+            content={<ChartTooltipContent hideLabel />}
+          />
+        )}
         <Pie
           data={chartData}
           dataKey="total"
@@ -81,7 +85,9 @@ export default function HoldingStocksChart({
                       y={viewBox.cy}
                       className="fill-foreground text-lg font-bold"
                     >
-                      {Number(summary.totalHoldingPrices).toLocaleString()}
+                      {amountVisible
+                        ? Number(summary.totalHoldingPrices).toLocaleString()
+                        : "****"}
                     </tspan>
                     <tspan
                       x={viewBox.cx}
