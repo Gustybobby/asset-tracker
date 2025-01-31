@@ -5,6 +5,7 @@ import DividendForm from "@/components/stocks/dividends/DividendForm";
 import DividendTable from "@/components/stocks/dividends/DividendTable";
 import HoldingStocksCard from "@/components/stocks/page/HoldingStocksCard";
 import StockTransactionsCard from "@/components/stocks/page/StockTransactionsCard";
+import TradePerformancesCard from "@/components/stocks/page/TradePerformancesCard";
 
 export default async function StockPage() {
   return (
@@ -22,14 +23,7 @@ export default async function StockPage() {
           <StockTransactionForm />
         </CardContent>
       </Card>
-      <Card className="col-span-3">
-        <CardHeader>
-          <CardTitle>Your Trade Performances</CardTitle>
-        </CardHeader>
-        <CardContent>
-          <TradePerformanceTable tradePerformances={[]} />
-        </CardContent>
-      </Card>
+      <TradePerformancesCard className="col-span-3" />
       <Card className="col-span-2">
         <CardHeader>
           <CardTitle>Dividend records</CardTitle>
