@@ -1,6 +1,6 @@
 "use client";
 
-import { useHoldingStocks } from "@/hooks/use-holding-stocks";
+import { useHoldingStocks } from "@/hooks/stocks/use-holding-stocks";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import HoldingStockTable from "../HoldingStockTable";
 
