@@ -1,7 +1,7 @@
 "use server";
 
 import type { Stock } from "../infrastructure/models/stock.model";
-import { TradePerformance } from "../interfaces/infrastructure/repos/stock.repo.interface";
+import type { TradePerformance } from "../interfaces/infrastructure/repos/stock.repo.interface";
 import { StockTransaction } from "../infrastructure/models/stock-transaction.model";
 import { Dividend } from "../infrastructure/models/dividend.model";
 import StockUseCase from "../usecases/stock.usecase";

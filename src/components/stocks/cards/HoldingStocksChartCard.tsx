@@ -2,10 +2,9 @@
 
 import { useHoldingStocks } from "@/hooks/stocks/use-holding-stocks";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
-import HoldingStockTable from "../HoldingStockTable";
-import TableSkeleton from "@/components/skeletons/TableSkeleton";
+import HoldingStocksChart from "../holdings/HoldingStocksChart";
 
-export default function HoldingStocksCard({
+export default function HoldingStocksChartCard({
   className,
 }: {
   className?: string;
@@ -15,16 +14,14 @@ export default function HoldingStocksCard({
   return (
     <Card className={className}>
       <CardHeader>
-        <CardTitle>Your stocks</CardTitle>
+        <CardTitle>Overview</CardTitle>
       </CardHeader>
       <CardContent>
-        {holdingStocks && holdingStocksSummary ? (
-          <HoldingStockTable
+        {holdingStocks && holdingStocksSummary && (
+          <HoldingStocksChart
             holdingStocks={holdingStocks}
             summary={holdingStocksSummary}
           />
-        ) : (
-          <TableSkeleton colNums={6} rowNums={6} />
         )}
       </CardContent>
     </Card>

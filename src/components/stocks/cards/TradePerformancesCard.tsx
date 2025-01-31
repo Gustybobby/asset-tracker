@@ -1,7 +1,7 @@
 "use client";
 
 import { Card, CardHeader, CardTitle, CardContent } from "@/components/ui/card";
-import TradePerformanceTable from "../TradePerformanceTable";
+import TradePerformanceTable from "../performances/TradePerformanceTable";
 import { useTradePerformances } from "@/hooks/stocks/use-trade-performances";
 import TableSkeleton from "@/components/skeletons/TableSkeleton";
 
@@ -11,8 +11,6 @@ export default function TradePerformancesCard({
   className?: string;
 }) {
   const { tradePerformances } = useTradePerformances();
-
-  console.log(tradePerformances);
 
   return (
     <Card className={className}>
