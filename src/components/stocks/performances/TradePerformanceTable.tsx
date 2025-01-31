@@ -30,7 +30,7 @@ export default function TradePerformanceTable({
     .map((stock) => (Number(stock.holding) > 0 ? 0 : Number(stock.totalFee)))
     .reduce((cum, curr) => cum + curr, 0);
   return (
-    <Table>
+    <Table divClassName="h-[32rem]">
       <TableCaption>Your individual stock trade performances</TableCaption>
       <TableHeader className="sticky top-0">
         <TableRow className="bg-muted hover:bg-muted">
