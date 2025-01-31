@@ -3,6 +3,7 @@
 import { useStockTransactions } from "@/hooks/stocks/use-stock-transactions";
 import { Card, CardHeader, CardTitle, CardContent } from "@/components/ui/card";
 import StockTransactionTable from "../transactions/StockTransactionTable";
+import TableSkeleton from "@/components/skeletons/TableSkeleton";
 
 export default function StockTransactionsCard({
   className,
@@ -20,7 +21,7 @@ export default function StockTransactionsCard({
         {stockTransactions ? (
           <StockTransactionTable transactions={stockTransactions} />
         ) : (
-          <div>Loading...</div>
+          <TableSkeleton colNums={7} rowNums={9} />
         )}
       </CardContent>
     </Card>

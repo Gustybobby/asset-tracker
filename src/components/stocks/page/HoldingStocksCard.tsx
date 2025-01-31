@@ -3,6 +3,7 @@
 import { useHoldingStocks } from "@/hooks/stocks/use-holding-stocks";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import HoldingStockTable from "../HoldingStockTable";
+import TableSkeleton from "@/components/skeletons/TableSkeleton";
 
 export default function HoldingStocksCard({
   className,
@@ -23,7 +24,7 @@ export default function HoldingStocksCard({
             summary={holdingStocksSummary}
           />
         ) : (
-          <div>Loading...</div>
+          <TableSkeleton colNums={6} rowNums={6} />
         )}
       </CardContent>
     </Card>
