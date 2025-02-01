@@ -21,24 +21,22 @@ import {
   SelectValue,
 } from "../../ui/select";
 import { Button } from "../../ui/button";
-import { useRouter } from "next/navigation";
 import { useState } from "react";
 import { createStockTransaction } from "@/server/controllers/stock.controller";
 
-export const StockTransactionFormSchema = StockTransaction.omit({
-  id: true,
-}).extend({
+const StockTransactionFormSchema = StockTransaction.omit({ id: true }).extend({
   stockId: z.string().min(1, "Required"),
   executedPrice: z.coerce.number().min(0, "Executed price cannot be negative"),
   shares: z.coerce.number(),
   fee: z.coerce.number().min(0, "Fee cannot be negative"),
 });
-export type StockTransactionFormSchema = z.infer<
-  typeof StockTransactionFormSchema
->;
+type StockTransactionFormSchema = z.infer<typeof StockTransactionFormSchema>;
 
-export default function StockTransactionForm() {
-  const router = useRouter();
+export default function StockTransactionForm({
+  onSuccessSubmit,
+}: {
+  onSuccessSubmit?: () => void;
+}) {
   const [disableSubmit, setDisableSubmit] = useState<boolean>(false);
 
   const form = useForm<StockTransactionFormSchema>({
@@ -61,7 +59,7 @@ export default function StockTransactionForm() {
         shares: String(data.shares),
         fee: String(data.fee),
       });
-      router.refresh();
+      onSuccessSubmit?.();
     } catch (error) {
       console.error(error);
     }

@@ -13,24 +13,24 @@ import {
   FormMessage,
 } from "../../ui/form";
 import { Input } from "../../ui/input";
-import { useRouter } from "next/navigation";
 import { useState } from "react";
 import { Button } from "@/components/ui/button";
 import { createDividend } from "@/server/controllers/stock.controller";
 
-export const DividendFormSchema = Dividend.omit({
-  id: true,
-}).extend({
+const DividendFormSchema = Dividend.omit({ id: true }).extend({
   stockId: z.string().min(1, "Required"),
   amount: z.coerce.number().gt(0, "Amount must be more than zero"),
   withHoldingTax: z.coerce
     .number()
     .min(0, "Withholding tax cannot be negative"),
 });
-export type DividendFormSchema = z.infer<typeof DividendFormSchema>;
+type DividendFormSchema = z.infer<typeof DividendFormSchema>;
 
-export default function DividendForm() {
-  const router = useRouter();
+export default function DividendForm({
+  onSuccessSubmit,
+}: {
+  onSuccessSubmit?: () => void;
+}) {
   const [disableSubmit, setDisableSubmit] = useState<boolean>(false);
 
   const form = useForm<DividendFormSchema>({
@@ -51,7 +51,7 @@ export default function DividendForm() {
         amount: String(data.amount),
         withHoldingTax: String(data.withHoldingTax),
       });
-      router.refresh();
+      onSuccessSubmit?.();
     } catch (error) {
       console.error(error);
     }
