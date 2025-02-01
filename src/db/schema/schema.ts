@@ -17,6 +17,12 @@ export const configsTable = pgTable("configs", {
   value: text("value").notNull(),
 });
 
+export const currencyExchangesTable = pgTable("currency_exchanges", {
+  id: serial("id").primaryKey(),
+  date: date("date", { mode: "date" }).notNull().unique(),
+  toUSD: numeric("to_usd").notNull(),
+});
+
 export const stocksTable = pgTable("stocks", {
   id: varchar("id", { length: STOCK_ID_MAX_LENGTH }).primaryKey(),
   holding: numeric("holding").notNull(),
@@ -27,7 +33,7 @@ export const stocksTable = pgTable("stocks", {
 export const stockPricesTable = pgTable(
   "stock_prices",
   {
-    id: serial().primaryKey(),
+    id: serial("id").primaryKey(),
     stockId: varchar("stock_id", { length: STOCK_ID_MAX_LENGTH })
       .references(() => stocksTable.id)
       .notNull(),
