@@ -15,7 +15,7 @@ import {
 import { Input } from "../../ui/input";
 import { useState } from "react";
 import { Button } from "@/components/ui/button";
-import { createDividend } from "@/server/controllers/stock.controller";
+import { createDividend } from "@/server/controllers/dividend.controller";
 
 const DividendFormSchema = Dividend.omit({ id: true }).extend({
   stockId: z.string().min(1, "Required"),

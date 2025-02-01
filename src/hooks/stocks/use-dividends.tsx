@@ -1,7 +1,7 @@
 "use client";
 
+import { getDividends } from "@/server/controllers/dividend.controller";
 import { useQuery } from "@tanstack/react-query";
-import { getDividends } from "@/server/controllers/stock.controller";
 
 export function useDividends() {
   const { data, refetch } = useQuery({

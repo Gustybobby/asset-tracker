@@ -1,14 +1,40 @@
-import type { Dividend } from "../infrastructure/models/dividend.model";
+import type {
+  IStockUseCase,
+  StockWithPrice,
+} from "../interfaces/usecases/stock.usecase.interface";
+import type {
+  IStockRepo,
+  TradePerformance,
+} from "../interfaces/infrastructure/repos/stock.repo.interface";
+import type { IStockDataService } from "../interfaces/infrastructure/services/stock-data.service.interface";
+import type { Stock } from "../infrastructure/models/stock.model";
 import type { StockTransaction } from "../infrastructure/models/stock-transaction.model";
-import type { IDividendRepo } from "../interfaces/infrastructure/repos/dividend.repo.interface";
-import type { IStockRepo } from "../interfaces/infrastructure/repos/stock.repo.interface";
-import type { IStockUseCase } from "../interfaces/usecases/stock.usecase.interface";
 
 export default class StockUseCase implements IStockUseCase {
   constructor(
     private readonly stockRepo: IStockRepo,
-    private readonly dividendRepo: IDividendRepo,
+    private readonly stockDataService: IStockDataService,
   ) {}
+
+  async getHoldingStocks(): Promise<Stock[]> {
+    return this.stockRepo.findHoldingStocks();
+  }
+
+  async getHoldingStockWithPrices(): Promise<StockWithPrice[]> {
+    return this.getHoldingStocks().then(async (holdingStocks) =>
+      Promise.all(
+        holdingStocks.map((stock) =>
+          this.stockDataService
+            .getDailyStockData({ stockId: stock.id, date: new Date() })
+            .then((priceData) => ({ ...stock, price: priceData.close })),
+        ),
+      ),
+    );
+  }
+
+  async getStockTransactions(): Promise<StockTransaction[]> {
+    return this.stockRepo.findStockTransactions();
+  }
 
   async createTransaction(
     data: Omit<StockTransaction, "id">,
@@ -25,7 +51,7 @@ export default class StockUseCase implements IStockUseCase {
     }
   }
 
-  async createDividend(data: Omit<Dividend, "id">): Promise<Dividend> {
-    return this.dividendRepo.createDividend(data);
+  async getStockTradePerformances(): Promise<TradePerformance[]> {
+    return this.stockRepo.findTradePerformances();
   }
 }
