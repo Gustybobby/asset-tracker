@@ -9,9 +9,9 @@ export function useStockTransactions() {
   const [date, setDate] = useState<Date>(new Date());
   const { data, refetch } = useQuery({
     queryKey: ["stockTransactions", date],
-    queryFn: async ({ queryKey }) =>
+    queryFn: async () =>
       transformStockTransationTableRows(
-        await getStockTransactionsByMonth(new Date(queryKey[1])),
+        await getStockTransactionsByMonth(date),
       ),
   });
 

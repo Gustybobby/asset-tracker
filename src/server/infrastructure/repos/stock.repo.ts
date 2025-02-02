@@ -24,17 +24,18 @@ export default class StockRepo implements IStockRepo {
   }
 
   async findStockTransactionsByMonth(date: Date): Promise<StockTransaction[]> {
+    const timezoneOffset = -new Date().getTimezoneOffset();
     return db
       .select()
       .from(stockTransactionsTable)
       .where(
         and(
           eq(
-            sql`DATE_PART('month',${stockTransactionsTable.submittedAt})`,
+            sql`DATE_PART('month',${stockTransactionsTable.submittedAt} + (${timezoneOffset} * INTERVAL '1 minute'))`,
             date.getMonth() + 1,
           ),
           eq(
-            sql`DATE_PART('year',${stockTransactionsTable.submittedAt})`,
+            sql`DATE_PART('year',${stockTransactionsTable.submittedAt} + (${timezoneOffset} * INTERVAL '1 minute'))`,
             date.getFullYear(),
           ),
         ),
