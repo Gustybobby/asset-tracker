@@ -28,11 +28,13 @@ export default function HoldingStocksChart({
   holdingStocks,
   summary,
   currencyExchange,
+  baseCurrency,
   amountVisible,
 }: {
   holdingStocks: HoldingStockTableRow[];
   summary: HoldingStockTableSummary;
   currencyExchange: CurrencyExchange;
+  baseCurrency: string;
   amountVisible: boolean;
 }) {
   const chartConfig = useMemo(
@@ -113,7 +115,7 @@ export default function HoldingStocksChart({
                             ).toFixed(2),
                           ).toLocaleString()
                         : "****"}{" "}
-                      THB )
+                      {baseCurrency} )
                     </tspan>
                   </text>
                 );

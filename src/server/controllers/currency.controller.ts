@@ -15,3 +15,7 @@ const currencyUseCase = new CurrencyUseCase(
 export async function getDailyCurrencyExchange(): Promise<CurrencyExchange> {
   return currencyUseCase.getDailyCurrencyExchange();
 }
+
+export async function getBaseCurrency(): Promise<string> {
+  return currencyUseCase.getBaseCurrency();
+}

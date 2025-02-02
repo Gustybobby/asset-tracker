@@ -2,4 +2,6 @@ import type { CurrencyExchange } from "@/server/infrastructure/models/currency-e
 
 export interface ICurrencyUseCase {
   getDailyCurrencyExchange(): Promise<CurrencyExchange>;
+
+  getBaseCurrency(): Promise<string>;
 }

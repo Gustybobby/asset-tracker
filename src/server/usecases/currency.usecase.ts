@@ -17,4 +17,10 @@ export default class CurrencyUseCase implements ICurrencyUseCase {
       new Date(),
     );
   }
+
+  async getBaseCurrency(): Promise<string> {
+    return this.configService
+      .getConfig("BASE_CURRENCY")
+      .then((config) => config.value);
+  }
 }

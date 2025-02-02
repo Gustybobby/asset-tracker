@@ -13,7 +13,14 @@ export default function HoldingStocksChartCard({
 }) {
   const { visible } = useAmountVisibility();
   const { holdingStocks, holdingStocksSummary } = useHoldingStocks();
-  const { currencyExchange } = useCurrencyExchange();
+  const { currencyExchange, baseCurrency } = useCurrencyExchange();
+
+  const isFetched = !!(
+    holdingStocks &&
+    holdingStocksSummary &&
+    currencyExchange &&
+    baseCurrency
+  );
 
   return (
     <Card className={className}>
@@ -21,11 +28,12 @@ export default function HoldingStocksChartCard({
         <CardTitle>Overview</CardTitle>
       </CardHeader>
       <CardContent>
-        {holdingStocks && holdingStocksSummary && currencyExchange && (
+        {isFetched && (
           <HoldingStocksChart
             holdingStocks={holdingStocks}
             summary={holdingStocksSummary}
             currencyExchange={currencyExchange}
+            baseCurrency={baseCurrency}
             amountVisible={visible}
           />
         )}

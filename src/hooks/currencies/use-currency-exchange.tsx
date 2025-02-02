@@ -1,16 +1,19 @@
 "use client";
 
 import { useQuery } from "@tanstack/react-query";
-import { getDailyCurrencyExchange } from "@/server/controllers/currency.controller";
+import {
+  getBaseCurrency,
+  getDailyCurrencyExchange,
+} from "@/server/controllers/currency.controller";
 
 export default function useCurrencyExchange() {
   const { data, refetch } = useQuery({
     queryKey: ["currencyExchange"],
-    queryFn: getDailyCurrencyExchange,
+    queryFn: async () => ({
+      currencyExchange: await getDailyCurrencyExchange(),
+      baseCurrency: await getBaseCurrency(),
+    }),
   });
 
-  return {
-    currencyExchange: data,
-    refetch,
-  };
+  return { ...data, refetch };
 }
