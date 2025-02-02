@@ -47,7 +47,9 @@ export default function HoldingStockTable({
               {stock.allocation}%)
             </TableCell>
             <TableCell>{stock.price}</TableCell>
-            <TableCell>{stock.holding}</TableCell>
+            <TableCell>
+              {amountVisible ? stock.holding : HIDDEN_PLACEHOLDER}
+            </TableCell>
             <TableCell>
               {amountVisible ? stock.averagePrice : HIDDEN_PLACEHOLDER}
             </TableCell>
