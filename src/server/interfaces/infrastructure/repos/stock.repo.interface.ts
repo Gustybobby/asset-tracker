@@ -6,7 +6,7 @@ export interface IStockRepo {
 
   findHoldingStocks(): Promise<Stock[]>;
 
-  findStockTransactions(): Promise<StockTransaction[]>;
+  findStockTransactionsByMonth(date: Date): Promise<StockTransaction[]>;
 
   findTradePerformances(): Promise<TradePerformance[]>;
 

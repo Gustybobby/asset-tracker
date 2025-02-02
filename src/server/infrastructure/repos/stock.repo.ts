@@ -7,7 +7,7 @@ import type { Stock } from "../models/stock.model";
 import type { StockTransaction } from "../models/stock-transaction.model";
 import { db } from "@/db";
 import { stocksTable, stockTransactionsTable } from "@/db/schema/schema";
-import { asc, desc, eq, gt, sql } from "drizzle-orm";
+import { and, asc, desc, eq, gt, sql } from "drizzle-orm";
 import { RepoSelectNotFoundError } from "./error";
 
 export default class StockRepo implements IStockRepo {
@@ -23,10 +23,22 @@ export default class StockRepo implements IStockRepo {
       .orderBy(asc(stocksTable.id));
   }
 
-  async findStockTransactions(): Promise<StockTransaction[]> {
+  async findStockTransactionsByMonth(date: Date): Promise<StockTransaction[]> {
     return db
       .select()
       .from(stockTransactionsTable)
+      .where(
+        and(
+          eq(
+            sql`DATE_PART('month',${stockTransactionsTable.submittedAt})`,
+            date.getMonth() + 1,
+          ),
+          eq(
+            sql`DATE_PART('year',${stockTransactionsTable.submittedAt})`,
+            date.getFullYear(),
+          ),
+        ),
+      )
       .orderBy(desc(stockTransactionsTable.submittedAt));
   }
 

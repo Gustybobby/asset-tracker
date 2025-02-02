@@ -7,7 +7,7 @@ export interface IStockUseCase {
 
   getHoldingStockWithPrices(): Promise<StockWithPrice[]>;
 
-  getStockTransactions(): Promise<StockTransaction[]>;
+  getStockTransactionsByMonth(date: Date): Promise<StockTransaction[]>;
 
   createTransaction(
     data: Omit<StockTransaction, "id">,

@@ -17,8 +17,10 @@ export async function getHoldingStockWithPrices(): Promise<StockWithPrice[]> {
   return stockUseCase.getHoldingStockWithPrices();
 }
 
-export async function getStockTransactions(): Promise<StockTransaction[]> {
-  return stockUseCase.getStockTransactions();
+export async function getStockTransactionsByMonth(
+  date: Date,
+): Promise<StockTransaction[]> {
+  return stockUseCase.getStockTransactionsByMonth(date);
 }
 
 export async function getStockTradePerformances(): Promise<TradePerformance[]> {

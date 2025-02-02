@@ -32,8 +32,8 @@ export default class StockUseCase implements IStockUseCase {
     );
   }
 
-  async getStockTransactions(): Promise<StockTransaction[]> {
-    return this.stockRepo.findStockTransactions();
+  async getStockTransactionsByMonth(date: Date): Promise<StockTransaction[]> {
+    return this.stockRepo.findStockTransactionsByMonth(date);
   }
 
   async createTransaction(
