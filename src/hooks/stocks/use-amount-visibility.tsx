@@ -13,7 +13,7 @@ export function AmountVisibilityTrigger() {
     <Button
       variant="ghost"
       size="icon"
-      className="size-7"
+      className="h-7 w-7"
       onClick={toggleVisible}
     >
       {visible ? <EyeIcon /> : <EyeClosedIcon />}
