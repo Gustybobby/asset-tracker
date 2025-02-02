@@ -1,6 +1,6 @@
 "use server";
 
-import { CurrencyExchange } from "../infrastructure/models/currency-exchange.model";
+import type { CurrencyExchange } from "../infrastructure/models/currency-exchange.model";
 import CurrencyUseCase from "../usecases/currency.usecase";
 import ConfigService from "../infrastructure/services/config.service";
 import ConfigRepo from "../infrastructure/repos/config.repo";
