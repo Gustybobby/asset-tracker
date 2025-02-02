@@ -2,6 +2,7 @@ import type {
   HoldingStockTableRow,
   HoldingStockTableSummary,
 } from "@/lib/utils/stock/stock.util.type";
+import type { CurrencyExchange } from "@/server/infrastructure/models/currency-exchange.model";
 import { useMemo } from "react";
 import {
   ChartContainer,
@@ -26,10 +27,12 @@ const COLORS = [
 export default function HoldingStocksChart({
   holdingStocks,
   summary,
+  currencyExchange,
   amountVisible,
 }: {
   holdingStocks: HoldingStockTableRow[];
   summary: HoldingStockTableSummary;
+  currencyExchange: CurrencyExchange;
   amountVisible: boolean;
 }) {
   const chartConfig = useMemo(
@@ -82,7 +85,7 @@ export default function HoldingStocksChart({
                   >
                     <tspan
                       x={viewBox.cx}
-                      y={viewBox.cy}
+                      y={(viewBox.cy || 0) - 12}
                       className="fill-foreground text-lg font-bold"
                     >
                       {amountVisible
@@ -91,10 +94,26 @@ export default function HoldingStocksChart({
                     </tspan>
                     <tspan
                       x={viewBox.cx}
-                      y={(viewBox.cy || 0) + 24}
+                      y={(viewBox.cy || 0) + 6}
                       className="fill-muted-foreground"
                     >
                       USD
+                    </tspan>
+                    <tspan
+                      x={viewBox.cx}
+                      y={(viewBox.cy || 0) + 24}
+                      className="fill-muted-foreground"
+                    >
+                      ({" "}
+                      {amountVisible
+                        ? Number(
+                            (
+                              Number(summary.totalHoldingPrices) /
+                              Number(currencyExchange.toUSD)
+                            ).toFixed(2),
+                          ).toLocaleString()
+                        : "****"}{" "}
+                      THB )
                     </tspan>
                   </text>
                 );

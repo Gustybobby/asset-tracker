@@ -69,7 +69,9 @@ export default function HoldingStockTable({
         <TableRow>
           <TableCell className="font-bold">Total</TableCell>
           <TableCell className="font-bold" colSpan={4}>
-            {amountVisible ? summary.totalHoldingPrices : HIDDEN_PLACEHOLDER}
+            {amountVisible
+              ? `${summary.totalHoldingPrices} USD`
+              : HIDDEN_PLACEHOLDER}
           </TableCell>
           <TableCell
             className={cn(
