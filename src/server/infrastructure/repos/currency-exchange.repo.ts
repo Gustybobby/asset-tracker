@@ -2,7 +2,7 @@ import type { ICurrencyExchangeRepo } from "@/server/interfaces/infrastructure/r
 import type { CurrencyExchange } from "../models/currency-exchange.model";
 import { db } from "@/db";
 import { currencyExchangesTable } from "@/db/schema/schema";
-import { eq } from "drizzle-orm";
+import { desc, eq } from "drizzle-orm";
 import { RepoSelectNotFoundError } from "./error";
 
 export default class CurrencyExchangeRepo implements ICurrencyExchangeRepo {
@@ -13,6 +13,18 @@ export default class CurrencyExchangeRepo implements ICurrencyExchangeRepo {
       .where(eq(currencyExchangesTable.date, date));
     if (currencyExchanges.length === 0) {
       throw new RepoSelectNotFoundError(currencyExchangesTable, { date });
+    }
+    return currencyExchanges[0];
+  }
+
+  async findLatestCurrencyExchange(): Promise<CurrencyExchange> {
+    const currencyExchanges = await db
+      .select()
+      .from(currencyExchangesTable)
+      .orderBy(desc(currencyExchangesTable.date))
+      .limit(1);
+    if (currencyExchanges.length === 0) {
+      throw new RepoSelectNotFoundError(currencyExchangesTable);
     }
     return currencyExchanges[0];
   }

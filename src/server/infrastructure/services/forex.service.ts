@@ -12,12 +12,17 @@ export default class ForexService implements IForexService {
     return this.currencyExchangeRepo
       .findCurrencyExchangeByDate(date)
       .catch(() =>
-        this.fetchPolygonConversionData(baseCurrency, date).then((close) =>
-          this.currencyExchangeRepo.createCurrencyExchange({
-            date,
-            toUSD: close.toFixed(8),
+        this.fetchPolygonConversionData(baseCurrency, date)
+          .then((close) =>
+            this.currencyExchangeRepo.createCurrencyExchange({
+              date,
+              toUSD: close.toFixed(8),
+            }),
+          )
+          .catch(() => {
+            console.error("error fetching today exchange rate");
+            return this.currencyExchangeRepo.findLatestCurrencyExchange();
           }),
-        ),
       );
   }
 
