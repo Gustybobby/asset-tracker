@@ -2,6 +2,7 @@ import type { Metadata } from "next";
 import { Inter } from "next/font/google";
 import { SidebarProvider, SidebarTrigger } from "@/components/ui/sidebar";
 import { AmountVisibilityTrigger } from "@/hooks/stocks/use-amount-visibility";
+import { ModeToggle, ThemeProvider } from "@/components/ui/theme-providers";
 import NavSideBar from "@/components/layout/NavSideBar";
 import "./globals.css";
 
@@ -18,18 +19,30 @@ export default function RootLayout({
   children: React.ReactNode;
 }>) {
   return (
-    <html lang="en">
+    <html lang="en" suppressHydrationWarning>
       <body className={inter.className}>
-        <SidebarProvider>
-          <NavSideBar />
-          <div className="h-screen w-full overflow-hidden">
-            <div className="w-full border-b p-2 shadow-sm">
-              <SidebarTrigger />
-              <AmountVisibilityTrigger />
+        <ThemeProvider
+          attribute="class"
+          defaultTheme="system"
+          enableSystem
+          disableTransitionOnChange
+        >
+          <SidebarProvider>
+            <NavSideBar />
+            <div className="h-screen w-full overflow-hidden">
+              <div className="flex w-full justify-between border-b p-2 shadow-sm">
+                <div>
+                  <SidebarTrigger />
+                  <AmountVisibilityTrigger />
+                </div>
+                <div>
+                  <ModeToggle />
+                </div>
+              </div>
+              {children}
             </div>
-            {children}
-          </div>
-        </SidebarProvider>
+          </SidebarProvider>
+        </ThemeProvider>
       </body>
     </html>
   );

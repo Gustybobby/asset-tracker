@@ -20,7 +20,7 @@ export default function TableSkeleton({
         <TableRow>
           {rangeArray(colNums).map((col) => (
             <TableHead key={col} className="bg-muted hover:bg-muted">
-              <div className="h-6 animate-pulse rounded-lg bg-gray-300" />
+              <div className="h-6 animate-pulse rounded-lg" />
             </TableHead>
           ))}
         </TableRow>
@@ -30,7 +30,7 @@ export default function TableSkeleton({
           <TableRow key={row}>
             {rangeArray(colNums).map((col) => (
               <TableCell key={`loader.${row}.${col}`}>
-                <div className="h-6 animate-pulse rounded-lg bg-gray-200" />
+                <div className="h-6 animate-pulse rounded-lg bg-muted" />
               </TableCell>
             ))}
           </TableRow>
