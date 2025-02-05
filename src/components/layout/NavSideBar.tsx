@@ -12,7 +12,11 @@ import {
   SidebarMenuButton,
   SidebarMenuItem,
 } from "../ui/sidebar";
-import { BadgeDollarSignIcon, ChartCandlestickIcon } from "lucide-react";
+import {
+  BadgeDollarSignIcon,
+  BanknoteIcon,
+  ChartCandlestickIcon,
+} from "lucide-react";
 import { usePathname } from "next/navigation";
 import Link from "next/link";
 
@@ -37,6 +41,14 @@ export default function NavSideBar() {
           <SidebarGroupLabel>Asset</SidebarGroupLabel>
           <SidebarGroupContent>
             <SidebarMenu>
+              <SidebarMenuItem>
+                <SidebarMenuButton asChild isActive={pathname === "/cash"}>
+                  <Link href={"/cash"}>
+                    <BanknoteIcon />
+                    Cash
+                  </Link>
+                </SidebarMenuButton>
+              </SidebarMenuItem>
               <SidebarMenuItem>
                 <SidebarMenuButton asChild isActive={pathname === "/stocks"}>
                   <Link href={"/stocks"}>
