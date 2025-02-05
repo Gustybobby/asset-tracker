@@ -15,8 +15,10 @@ import {
 } from "@/components/ui/carousel";
 
 export default function BankAccountsCarousel({
+  amountVisible,
   bankAccounts,
 }: {
+  amountVisible: boolean;
   bankAccounts: BankAccount[];
 }) {
   return (
@@ -32,8 +34,8 @@ export default function BankAccountsCarousel({
                     {bankAccount.isUSD ? "USD Account" : ""}
                   </CardDescription>
                 </CardHeader>
-                <CardContent className="flex flex-col items-start p-6">
-                  Balance: {bankAccount.balance}
+                <CardContent className="flex flex-col items-start p-6 font-semibold">
+                  Balance: {amountVisible ? bankAccount.balance : "****"}
                 </CardContent>
               </Card>
             </div>

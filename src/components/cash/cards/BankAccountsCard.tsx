@@ -6,11 +6,13 @@ import BankAccountsCarousel from "../bank-accounts/BankAccountsCarousel";
 
 interface BankAccountsCardProps {
   className?: string;
+  amountVisible: boolean;
   bankAccounts?: BankAccount[];
 }
 
 export default function BankAccountsCard({
   className,
+  amountVisible,
   bankAccounts,
 }: BankAccountsCardProps) {
   return (
@@ -19,7 +21,12 @@ export default function BankAccountsCard({
         <CardTitle>Your accounts</CardTitle>
       </CardHeader>
       <CardContent className="px-24">
-        {bankAccounts && <BankAccountsCarousel bankAccounts={bankAccounts} />}
+        {bankAccounts && (
+          <BankAccountsCarousel
+            amountVisible={amountVisible}
+            bankAccounts={bankAccounts}
+          />
+        )}
       </CardContent>
     </Card>
   );
