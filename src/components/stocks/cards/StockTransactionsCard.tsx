@@ -1,8 +1,7 @@
 "use client";
 
+import type { StockTransactionTableRow } from "@/lib/utils/stock/stock.util.type";
 import type { Dispatch, SetStateAction } from "react";
-import { useAmountVisibility } from "@/hooks/stocks/use-amount-visibility";
-import { useStockTransactions } from "@/hooks/stocks/use-stock-transactions";
 import { Card, CardHeader, CardTitle, CardContent } from "@/components/ui/card";
 import {
   DropdownMenu,
@@ -14,14 +13,21 @@ import { Button } from "@/components/ui/button";
 import StockTransactionTable from "../transactions/StockTransactionTable";
 import TableSkeleton from "@/components/skeletons/TableSkeleton";
 
+interface StockTransactionsCardProps {
+  className?: string;
+  amountVisible: boolean;
+  stockTransactions?: StockTransactionTableRow[];
+  date: Date;
+  setDate: Dispatch<SetStateAction<Date>>;
+}
+
 export default function StockTransactionsCard({
   className,
-}: {
-  className?: string;
-}) {
-  const { visible } = useAmountVisibility();
-  const { stockTransactions, date, setDate } = useStockTransactions();
-
+  amountVisible,
+  stockTransactions,
+  date,
+  setDate,
+}: StockTransactionsCardProps) {
   return (
     <Card className={className}>
       <CardHeader className="flex flex-row justify-between">
@@ -32,7 +38,7 @@ export default function StockTransactionsCard({
         {stockTransactions ? (
           <StockTransactionTable
             transactions={stockTransactions}
-            amountVisible={visible}
+            amountVisible={amountVisible}
           />
         ) : (
           <TableSkeleton colNums={7} rowNums={9} />

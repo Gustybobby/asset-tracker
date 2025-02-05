@@ -1,19 +1,26 @@
 "use client";
 
-import { useAmountVisibility } from "@/hooks/stocks/use-amount-visibility";
-import { useHoldingStocks } from "@/hooks/stocks/use-holding-stocks";
+import type {
+  HoldingStockTableRow,
+  HoldingStockTableSummary,
+} from "@/lib/utils/stock/stock.util.type";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import HoldingStockTable from "../holdings/HoldingStockTable";
 import TableSkeleton from "@/components/skeletons/TableSkeleton";
 
+interface HoldingStocksCardProps {
+  className?: string;
+  amountVisible: boolean;
+  holdingStocks?: HoldingStockTableRow[];
+  holdingStocksSummary?: HoldingStockTableSummary;
+}
+
 export default function HoldingStocksCard({
   className,
-}: {
-  className?: string;
-}) {
-  const { visible } = useAmountVisibility();
-  const { holdingStocks, holdingStocksSummary } = useHoldingStocks();
-
+  amountVisible,
+  holdingStocks,
+  holdingStocksSummary,
+}: HoldingStocksCardProps) {
   return (
     <Card className={className}>
       <CardHeader>
@@ -24,7 +31,7 @@ export default function HoldingStocksCard({
           <HoldingStockTable
             holdingStocks={holdingStocks}
             summary={holdingStocksSummary}
-            amountVisible={visible}
+            amountVisible={amountVisible}
           />
         ) : (
           <TableSkeleton colNums={6} rowNums={6} />

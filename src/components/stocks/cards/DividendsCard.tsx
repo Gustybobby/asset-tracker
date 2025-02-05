@@ -1,15 +1,21 @@
 "use client";
 
-import { useAmountVisibility } from "@/hooks/stocks/use-amount-visibility";
-import { useDividends } from "@/hooks/stocks/use-dividends";
+import type { Dividend } from "@/server/infrastructure/models/dividend.model";
 import { Card, CardHeader, CardTitle, CardContent } from "@/components/ui/card";
 import DividendTable from "../dividends/DividendTable";
 import TableSkeleton from "@/components/skeletons/TableSkeleton";
 
-export default function DividendsCard({ className }: { className?: string }) {
-  const { visible } = useAmountVisibility();
-  const { dividends } = useDividends();
+interface DividendsCardProps {
+  className?: string;
+  amountVisible: boolean;
+  dividends?: Dividend[];
+}
 
+export default function DividendsCard({
+  className,
+  amountVisible,
+  dividends,
+}: DividendsCardProps) {
   return (
     <Card className={className}>
       <CardHeader>
@@ -17,7 +23,7 @@ export default function DividendsCard({ className }: { className?: string }) {
       </CardHeader>
       <CardContent>
         {dividends ? (
-          <DividendTable dividends={dividends} amountVisible={visible} />
+          <DividendTable dividends={dividends} amountVisible={amountVisible} />
         ) : (
           <TableSkeleton colNums={5} rowNums={6} />
         )}

@@ -1,20 +1,26 @@
 "use client";
 
-import { useAmountVisibility } from "@/hooks/stocks/use-amount-visibility";
-import { useTradePerformances } from "@/hooks/stocks/use-trade-performances";
+import type {
+  TradePerformanceTableRow,
+  TradePerformanceTableSummary,
+} from "@/lib/utils/stock/stock.util.type";
 import { Card, CardHeader, CardTitle, CardContent } from "@/components/ui/card";
 import TradePerformanceTable from "../performances/TradePerformanceTable";
 import TableSkeleton from "@/components/skeletons/TableSkeleton";
 
+interface TradePerformancesCardProps {
+  className?: string;
+  amountVisible: boolean;
+  tradePerformances?: TradePerformanceTableRow[];
+  tradePerformancesSummary?: TradePerformanceTableSummary;
+}
+
 export default function TradePerformancesCard({
   className,
-}: {
-  className?: string;
-}) {
-  const { visible } = useAmountVisibility();
-  const { tradePerformances, tradePerformancesSummary } =
-    useTradePerformances();
-
+  amountVisible,
+  tradePerformances,
+  tradePerformancesSummary,
+}: TradePerformancesCardProps) {
   return (
     <Card className={className}>
       <CardHeader>
@@ -25,7 +31,7 @@ export default function TradePerformancesCard({
           <TradePerformanceTable
             tradePerformances={tradePerformances}
             summary={tradePerformancesSummary}
-            amountVisible={visible}
+            amountVisible={amountVisible}
           />
         ) : (
           <TableSkeleton colNums={5} rowNums={10} />

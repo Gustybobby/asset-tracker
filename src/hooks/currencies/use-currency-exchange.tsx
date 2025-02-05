@@ -6,7 +6,7 @@ import {
   getDailyCurrencyExchange,
 } from "@/server/controllers/currency.controller";
 
-export default function useCurrencyExchange() {
+export function useCurrencyExchange() {
   const { data, refetch } = useQuery({
     queryKey: ["currencyExchange"],
     queryFn: async () => ({
