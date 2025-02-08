@@ -4,6 +4,7 @@ import { useAmountVisibility } from "@/hooks/stocks/use-amount-visibility";
 import { useCurrencyExchange } from "@/hooks/currencies/use-currency-exchange";
 import { useHoldingStocks } from "@/hooks/stocks/use-holding-stocks";
 import { useStockTransactions } from "@/hooks/stocks/use-stock-transactions";
+import { useBankAccounts } from "@/hooks/cash/use-bank-accounts";
 import { useTradePerformances } from "@/hooks/stocks/use-trade-performances";
 import { useDividends } from "@/hooks/stocks/use-dividends";
 import HoldingStocksCard from "@/components/stocks/cards/HoldingStocksCard";
@@ -28,6 +29,7 @@ export default function StockPage() {
     date,
     setDate,
   } = useStockTransactions();
+  const { bankAccounts, refetch: refetchBankAccounts } = useBankAccounts();
   const {
     tradePerformances,
     tradePerformancesSummary,
@@ -58,9 +60,11 @@ export default function StockPage() {
         setDate={setDate}
       />
       <StockTransactionFormCard
+        bankAccounts={bankAccounts}
         onSuccessSubmit={() => {
           refetchHoldingStocks();
           refetchStockTransactions();
+          refetchBankAccounts();
           refetchTradePerformances();
         }}
       />

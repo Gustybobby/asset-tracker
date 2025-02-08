@@ -1,5 +1,6 @@
 "use client";
 
+import type { BankAccount } from "@/server/infrastructure/models/bank-account.model";
 import { StockTransaction } from "@/server/infrastructure/models/stock-transaction.model";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { useForm } from "react-hook-form";
@@ -33,8 +34,10 @@ const StockTransactionFormSchema = StockTransaction.omit({ id: true }).extend({
 type StockTransactionFormSchema = z.infer<typeof StockTransactionFormSchema>;
 
 export default function StockTransactionForm({
+  bankAccounts,
   onSuccessSubmit,
 }: {
+  bankAccounts?: BankAccount[];
   onSuccessSubmit?: () => void;
 }) {
   const [disableSubmit, setDisableSubmit] = useState<boolean>(false);
@@ -142,6 +145,33 @@ export default function StockTransactionForm({
               <FormControl>
                 <Input {...field} />
               </FormControl>
+              <FormMessage />
+            </FormItem>
+          )}
+        />
+        <FormField
+          control={form.control}
+          name="accountId"
+          render={({ field }) => (
+            <FormItem>
+              <FormLabel>Account</FormLabel>
+              <Select
+                onValueChange={field.onChange}
+                value={field.value ?? undefined}
+              >
+                <FormControl>
+                  <SelectTrigger>
+                    <SelectValue placeholder="Select an account" />
+                  </SelectTrigger>
+                </FormControl>
+                <SelectContent>
+                  {bankAccounts?.map((account) => (
+                    <SelectItem key={account.id} value={account.id}>
+                      {account.name}
+                    </SelectItem>
+                  ))}
+                </SelectContent>
+              </Select>
               <FormMessage />
             </FormItem>
           )}
