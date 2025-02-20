@@ -24,9 +24,14 @@ export default class StockDataService implements IStockDataService {
       return stockPrice;
     }
 
-    const polygonStockData = await this.fetchPolygonDailyOpenClose(modParams);
+    const polygonStockData = await this.fetchPolygonDailyOpenClose(
+      modParams,
+    ).catch(() => undefined);
+    if (polygonStockData) {
+      return this.stockPriceRepo.createStockPrice(polygonStockData);
+    }
 
-    return this.stockPriceRepo.createStockPrice(polygonStockData);
+    return this.stockPriceRepo.findLatestStockPrice(params.stockId);
   }
 
   private getLatestWeekDayDate(date: Date): Date {

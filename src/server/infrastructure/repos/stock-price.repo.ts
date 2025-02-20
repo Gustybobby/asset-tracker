@@ -2,7 +2,7 @@ import type { IStockPriceRepo } from "@/server/interfaces/infrastructure/repos/s
 import type { StockPrice } from "../models/stock-price.model";
 import { db } from "@/db";
 import { stockPricesTable } from "@/db/schema/schema";
-import { and, eq } from "drizzle-orm";
+import { and, desc, eq } from "drizzle-orm";
 import { RepoSelectNotFoundError } from "./error";
 
 export default class StockPriceRepo implements IStockPriceRepo {
@@ -20,6 +20,19 @@ export default class StockPriceRepo implements IStockPriceRepo {
       );
     if (stockPrices.length === 0) {
       throw new RepoSelectNotFoundError(stockPricesTable, params);
+    }
+    return stockPrices[0];
+  }
+
+  async findLatestStockPrice(id: string): Promise<StockPrice> {
+    const stockPrices = await db
+      .select()
+      .from(stockPricesTable)
+      .where(eq(stockPricesTable.stockId, id))
+      .orderBy(desc(stockPricesTable.date))
+      .limit(1);
+    if (stockPrices.length === 0) {
+      throw new RepoSelectNotFoundError(stockPricesTable, { id });
     }
     return stockPrices[0];
   }
